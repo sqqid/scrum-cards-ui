@@ -1,0 +1,8 @@
+.table {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    letter-spacing: .02rem;
+    flex-wrap: wrap;
+    max-width: 1100px;
+}

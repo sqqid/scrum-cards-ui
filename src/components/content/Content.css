@@ -1,0 +1,35 @@
+.content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    flex-direction: column;
+    margin-bottom: 8rem;
+}
+
+.content__controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-bottom: 10rem;
+}
+
+.content__controls .btn {
+    max-height: 3rem;
+    background-color: var(--secondary-color-trans-15);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content__controls .btn:hover {
+    background-color: var(--secondary-color-trans-30);
+}
+
+.btn__span--controls {
+    width: 10rem;
+    font-size: 1rem;
+    padding: 0 .4rem 0 .4rem;
+    font-weight: 600;
+}
