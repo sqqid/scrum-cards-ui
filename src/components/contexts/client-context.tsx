@@ -5,7 +5,7 @@ import {of} from "rxjs";
 export interface IClient {
     id: string | undefined,
     name: string | undefined
-    setClient:React.Dispatch<React.SetStateAction<IClientState>>
+    changeClient: ({id, name}: {id?: string , name?: string}) => void
 }
 
 interface IClientState {
@@ -13,15 +13,19 @@ interface IClientState {
     name: string | undefined
 }
 
-const ClientContext = createContext<IClient>({id: undefined, name: undefined, setClient: () => null})
+const ClientContext = createContext<IClient>({
+    id: undefined,
+    name: undefined,
+    changeClient: () => null
+})
 
 // @ts-ignore
 const ClientProvider = ({children}) => {
     const [client, setClient] = useState<IClientState>({id: undefined, name: undefined});
 
-    const setClientName = (name: string) => {
-        if(client.name) localStorage.setItem(storage.CLIENT_NAME, name)
-        setClient({...client, name})
+    const changeClient = ({id, name}: {id?: string , name?: string}) => {
+        if(name) localStorage.setItem(storage.CLIENT_NAME, name)
+        setClient({...client, id, name})
     }
 
     useLayoutEffect(() => {
@@ -31,7 +35,7 @@ const ClientProvider = ({children}) => {
     }, [])
 
     return (
-        <ClientContext.Provider value={{id: client.id, name: client.name, setClient}}>
+        <ClientContext.Provider value={{id: client.id, name: client.name, changeClient}}>
             {children}
         </ClientContext.Provider>
     )

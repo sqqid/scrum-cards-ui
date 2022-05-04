@@ -15,7 +15,7 @@ const Modal: FC<{ visible: boolean, setVisible: React.Dispatch<React.SetStateAct
     const setVisibility = () => setVisible ? setVisible(false) : null
 
     const setUserName = () => {
-        if (input) clientContext.setClient({...clientContext, name: input})
+        if (input) clientContext.changeClient({...clientContext, name: input})
         setVisibility()
     }
 

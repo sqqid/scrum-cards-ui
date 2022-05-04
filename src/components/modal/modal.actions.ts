@@ -14,8 +14,7 @@ const modalActions = {
                 return {roomId, clientName, clientId}
             })
         ).subscribe(({clientId, clientName, roomId}) => {
-            console.log(`${clientId}, ${clientName}, ${roomId}`)
-            clientContext.setClient({id: clientId, name: clientName})
+            clientContext.changeClient({id: clientId, name: clientName})
         })
     }
 
