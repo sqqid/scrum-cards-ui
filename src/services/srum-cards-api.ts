@@ -1,4 +1,4 @@
-import {from, Observable, Subject} from "rxjs";
+import {from, Observable} from "rxjs";
 import {webSocket, WebSocketSubject} from "rxjs/webSocket";
 
 enum REQUEST_METHOD {
@@ -23,7 +23,7 @@ class SrumCardsApi {
         return this.getObservable(`rooms/${roomId}/clients/${name}`, REQUEST_METHOD.PUT)
     }
 
-    addScore(roomId: string, clientId: string, score: number): Observable<string> {
+    setScore(roomId: string, clientId: string, score: number): Observable<string> {
         return this.getObservable(`rooms/${roomId}/clients/${clientId}/score/${score}`, REQUEST_METHOD.PUT)
     }
 
@@ -44,10 +44,10 @@ class SrumCardsApi {
 
     private getObservable(endpint: string, method: REQUEST_METHOD): Observable<any> {
         const url = `${this.apiUrl}/${endpint}`
-        return this.fetchData(url, method)
+        return SrumCardsApi.fetchData(url, method)
     }
 
-    private fetchData(url: string, method: REQUEST_METHOD) {
+    private static fetchData(url: string, method: REQUEST_METHOD) {
         return from(fetch(url, {
             method: method,
             headers: {'Content-type': 'application/json; charset=UTF-8'}
