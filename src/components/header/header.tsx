@@ -1,8 +1,11 @@
 import {FC, useContext, useState} from "react";
 import './header.css'
 import Modal from "../modal/modal";
-import {ThemeContext} from "../contexts/theme-context";
+import {THEME, ThemeContext} from "../contexts/theme-context";
 import {ClientContext} from "../contexts/client-context";
+import MoonSvg from "./svg/moon-svg";
+import SunSvg from "./svg/sun-svg";
+import DownArrow from "./svg/down-arrow";
 
 const Header: FC = () => {
     const [modalVisiible, setModalVisible] = useState<boolean>(false);
@@ -19,15 +22,14 @@ const Header: FC = () => {
             <div className="headr__right">
                 <button className="btn"
                         onClick={() => themeContext.toggleTheme()}>
-                    <span className="btn__span btn__span--header">Light</span>
+                    <span className="btn__span btn__span--header">
+                        {themeContext.theme === THEME.LIGHT ? <MoonSvg/> : <SunSvg/>}
+                    </span>
                 </button>
                 <button className="btn"
                         onClick={visibleToggle}>
                     <span className="btn__span btn__span--header">{clientContext.name}</span>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path className="btn__path" d="M2.66699 5.33329L7.84794 10.6666L13.3337 5.33329"
-                              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
-                    </svg>
+                    <DownArrow/>
                 </button>
             </div>
         </div>
