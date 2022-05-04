@@ -30,7 +30,7 @@ const ThemeProvider = ({children}) => {
 
     useLayoutEffect( () => {
         of(localStorage.getItem(storage.THEME)).subscribe( (value) =>{
-            if(value !== null) setTheme({theme: value})
+            if(value) setTheme({theme: value})
         }).unsubscribe()
     }, [])
 

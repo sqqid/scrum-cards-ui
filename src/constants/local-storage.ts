@@ -1,6 +1,6 @@
-
 export const storage = {
-   THEME: 'THEME'
+    THEME: 'THEME',
+    CLIENT_NAME: "CLIENT_NAME"
 }
 
 export default storage
