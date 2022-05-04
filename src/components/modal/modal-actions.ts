@@ -1,10 +1,15 @@
 import {combineLatestWith, map, mergeMap, of, zip} from "rxjs";
 import scrumCardsApi from "../../services/srum-cards-api";
-import {IClient} from "../contexts/client-context";
+
+interface IAddRoomClicked {
+    clientId: string;
+    clientName: string;
+    roomId: string
+}
 
 const modalActions = {
 
-    addRoomClicked:(clientName: string, clientContext: IClient) => {
+    addRoomClicked: (clientName: string, observer: { next: (data: IAddRoomClicked) => void }) => {
         of(clientName).pipe(
             combineLatestWith(scrumCardsApi.createRoom()),
             mergeMap(([clientName, roomId]: string[]) => {
@@ -13,11 +18,11 @@ const modalActions = {
             map(([roomId, clientName, clientId]) => {
                 return {roomId, clientName, clientId}
             })
-        ).subscribe(({clientId, clientName, roomId}) => {
-            clientContext.changeClient({id: clientId, name: clientName})
-        })
+        ).subscribe(observer)
     }
 
 }
 
-export default modalActions
+export {modalActions}
+export type { IAddRoomClicked };
+

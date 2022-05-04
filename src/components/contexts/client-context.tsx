@@ -2,10 +2,10 @@ import {createContext, useEffect, useLayoutEffect, useState} from "react";
 import storage from "../../constants/local-storage";
 import {of} from "rxjs";
 
-export interface IClient {
+interface IClient {
     id: string | undefined,
     name: string | undefined
-    changeClient: ({id, name}: {id?: string , name?: string}) => void
+    changeClient: ({id, name}: { id?: string, name?: string }) => void
 }
 
 interface IClientState {
@@ -23,8 +23,8 @@ const ClientContext = createContext<IClient>({
 const ClientProvider = ({children}) => {
     const [client, setClient] = useState<IClientState>({id: undefined, name: undefined});
 
-    const changeClient = ({id, name}: {id?: string , name?: string}) => {
-        if(name) localStorage.setItem(storage.CLIENT_NAME, name)
+    const changeClient = ({id, name}: { id?: string, name?: string }) => {
+        if (name) localStorage.setItem(storage.CLIENT_NAME, name)
         setClient({...client, id, name})
     }
 
@@ -42,3 +42,4 @@ const ClientProvider = ({children}) => {
 }
 
 export {ClientContext, ClientProvider}
+export type {IClient};

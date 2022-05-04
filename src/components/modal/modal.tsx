@@ -1,8 +1,9 @@
 import {ChangeEvent, FC, useContext, useEffect, useState} from "react";
 import './modal.css'
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {ClientContext} from "../contexts/client-context";
-import modalActions from "./modal.actions";
+import conf from "../../constants/config";
+import {IAddRoomClicked, modalActions} from "./modal-actions";
 
 
 const Modal: FC<{ visible: boolean, setVisible: React.Dispatch<React.SetStateAction<boolean>> | undefined }> = (
@@ -11,6 +12,7 @@ const Modal: FC<{ visible: boolean, setVisible: React.Dispatch<React.SetStateAct
     const {room_id} = useParams()
     const clientContext = useContext(ClientContext)
     const [input, setInput] = useState('')
+    const navigate = useNavigate()
 
     const setVisibility = () => setVisible ? setVisible(false) : null
 
@@ -20,7 +22,14 @@ const Modal: FC<{ visible: boolean, setVisible: React.Dispatch<React.SetStateAct
     }
 
     const addNewRoom = () => {
-        modalActions.addRoomClicked(input, clientContext);
+        const observer = {
+            next: (data: IAddRoomClicked) => {
+                clientContext.changeClient({id: data.clientId, name: data.clientName})
+                navigate(`../${conf.BASE_URL}/${data.roomId}`)
+            }
+        }
+        modalActions.addRoomClicked(input, observer);
+        setVisibility()
     }
 
     const inputChange = (event: ChangeEvent<HTMLInputElement>) => {
