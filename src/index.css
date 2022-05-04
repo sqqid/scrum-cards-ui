@@ -7,6 +7,7 @@
 :root, :root.light {
     --background-color: #f9f9f9;
     --primary-color: #A44BA4;
+    --primary-color-trans-02: rgba(164, 75, 164, .025);
     --secondary-color: rgb(166, 103, 174);
     --secondary-color-trans-15: rgba(166, 103, 174, .15);
     --secondary-color-trans-30: rgba(166, 103, 174, .30);
@@ -15,6 +16,7 @@
 :root.dark {
     --background-color: #191b1c;
     --primary-color: #A667AEFF;
+    --primary-color-trans-02: rgba(164, 75, 164, .025);
     --secondary-color: rgb(166, 103, 174);
     --secondary-color-trans-15: rgba(166, 103, 174, .3);
     --secondary-color-trans-30: rgba(166, 103, 174, .6);

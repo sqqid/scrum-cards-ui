@@ -1,8 +1,8 @@
-import React from "react";
-import './Footer.css'
-import Picker from "./picker/Picker";
+import {FC} from "react";
+import './footer.css'
+import Picker from "./picker/picker";
 
-const Footer: React.FC = () => {
+const Footer: FC = () => {
    return (
        <div className="footer">
            <span>Choose your card:</span>

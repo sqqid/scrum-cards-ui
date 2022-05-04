@@ -1,10 +1,21 @@
 .content {
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
-    flex-grow: 1;
     flex-direction: column;
     margin-bottom: 8rem;
+    flex-grow: 1;
+}
+
+.content__top {
+    margin-bottom: 5rem;
+    flex-grow: 1.6;
+    display: flex;
+}
+
+.content__bottom {
+    flex-grow: 2;
+    display: flex;
 }
 
 .content__controls {
@@ -12,7 +23,7 @@
     justify-content: center;
     align-items: center;
     position: relative;
-    margin-bottom: 10rem;
+    margin-top: auto;
 }
 
 .content__controls .btn {
