@@ -7,6 +7,7 @@ import {contentActions, IRoomState} from "./content-actions";
 import conf from "../../constants/config";
 import {RoomStateContext, RoomStateEnum} from "../contexts/room-context";
 import {ModalContext} from "../contexts/modal-context";
+import scrumCardsApi from "../../services/srum-cards-api";
 
 const Content: FC = () => {
 
@@ -23,7 +24,7 @@ const Content: FC = () => {
             return
         }
 
-        if (clientContext.id) {
+        if (clientContext.id && !scrumCardsApi.getStream()) {
             contentActions.openStream(room_id, clientContext.id, {
                 next: async (data) => {
                     const roomData:IRoomState = JSON.parse(data)

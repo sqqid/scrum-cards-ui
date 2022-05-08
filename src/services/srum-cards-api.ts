@@ -52,12 +52,16 @@ class SrumCardsApi {
         return this.stream
     }
 
-    disconnect(roomId: string, clientId: string) {
+    disconnectStrem() {
         if (this.stream) {
             this.stream.complete()
             this.stream.unsubscribe()
             this.stream = undefined
         }
+    }
+
+    getStream() {
+        return this.stream
     }
 
     private getObservable(endpint: string, method: REQUEST_METHOD): Observable<any> {

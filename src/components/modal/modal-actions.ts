@@ -14,7 +14,7 @@ const modalActions = {
                 return zip(of(roomId), scrumCardsApi.registerClient(roomId, clientName))
             }),
             map(([roomId, clientId]) => {
-                scrumCardsApi.disconnect(roomId, clientId)
+                scrumCardsApi.disconnectStrem()
                 return {roomId, clientId}
             })
         ).subscribe(observer)
