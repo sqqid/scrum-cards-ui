@@ -31,5 +31,5 @@
 .picker__card--selected {
     background-color: var(--secondary-color);
     color: var(--background-color);
-    margin: -1rem 0 1rem 0;
+    margin-top: -1rem;
 }

@@ -3,7 +3,8 @@ import {webSocket, WebSocketSubject} from "rxjs/webSocket";
 
 enum REQUEST_METHOD {
     PUT = 'PUT',
-    GET = 'GET'
+    GET = 'GET',
+    DELETE = 'DELETE'
 }
 
 class SrumCardsApi {
@@ -12,7 +13,7 @@ class SrumCardsApi {
     private stream: WebSocketSubject<any> | undefined
 
     constructor() {
-        this.apiUrl = `http://${process.env.REACT_APP_SCRUM_CARDS_ENDPOING}/api/v1`
+        this.apiUrl = `${process.env.REACT_APP_SCRUM_CARDS_ENDPOING}/api/v1`
     }
 
     createRoom(): Observable<string> {
@@ -23,8 +24,17 @@ class SrumCardsApi {
         return this.getObservable(`rooms/${roomId}/clients/${name}`, REQUEST_METHOD.PUT)
     }
 
-    setScore(roomId: string, clientId: string, score: number): Observable<string> {
+    changeClientName(roomId: string, clientId: string, name: string): Observable<string> {
+        return this.getObservable(`rooms/${roomId}/clients/${clientId}/${name}`, REQUEST_METHOD.PUT)
+    }
+
+    addScore(roomId: string, clientId: string, score: string): Observable<string> {
+        score = score === '?' ? '%3F': score
         return this.getObservable(`rooms/${roomId}/clients/${clientId}/score/${score}`, REQUEST_METHOD.PUT)
+    }
+
+    removeScore(roomId: string, clientId: string): Observable<string> {
+        return this.getObservable(`rooms/${roomId}/clients/${clientId}/score`, REQUEST_METHOD.DELETE)
     }
 
     pick(roomId: string): Observable<null> {
@@ -35,15 +45,15 @@ class SrumCardsApi {
         return this.getObservable(`rooms/${roomId}/reveal`, REQUEST_METHOD.GET)
     }
 
-    openStrem(roomId: string, clien_id: string): WebSocketSubject<any> {
+    openStrem(roomId: string, clientId: string): WebSocketSubject<any> {
         if (!this.stream) {
-            this.stream = webSocket(`ws//${this.apiUrl}/rooms/${roomId}/clients/${clien_id}/ws`)
+            this.stream = webSocket(`ws://${this.apiUrl}/rooms/${roomId}/clients/${clientId}/ws`)
         }
         return this.stream
     }
 
     private getObservable(endpint: string, method: REQUEST_METHOD): Observable<any> {
-        const url = `${this.apiUrl}/${endpint}`
+        const url = `http://${this.apiUrl}/${endpint}`
         return SrumCardsApi.fetchData(url, method)
     }
 

@@ -1,6 +1,5 @@
-import {createContext, useEffect, useLayoutEffect, useState} from "react";
+import {createContext, useState} from "react";
 import storage from "../../constants/local-storage";
-import {of} from "rxjs";
 
 interface IClient {
     id: string | undefined,
@@ -21,18 +20,13 @@ const ClientContext = createContext<IClient>({
 
 // @ts-ignore
 const ClientProvider = ({children}) => {
-    const [client, setClient] = useState<IClientState>({id: undefined, name: undefined});
+    const localStorageName = localStorage.getItem(storage.CLIENT_NAME)
+    const [client, setClient] = useState<IClientState>({id: undefined, name: localStorageName ? localStorageName : undefined});
 
     const changeClient = ({id, name}: { id?: string, name?: string }) => {
         if (name) localStorage.setItem(storage.CLIENT_NAME, name)
         setClient({...client, id, name})
     }
-
-    useLayoutEffect(() => {
-        of(localStorage.getItem(storage.CLIENT_NAME)).subscribe((clientName) => {
-            if (clientName) setClient({...client, name: clientName})
-        }).unsubscribe()
-    }, [])
 
     return (
         <ClientContext.Provider value={{id: client.id, name: client.name, changeClient}}>

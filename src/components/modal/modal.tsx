@@ -1,4 +1,4 @@
-import {ChangeEvent, FC, useContext, useEffect, useState} from "react";
+import {ChangeEvent, Dispatch, FC, SetStateAction, useContext, useEffect, useState} from "react";
 import './modal.css'
 import {useNavigate, useParams} from "react-router-dom";
 import {ClientContext} from "../contexts/client-context";
@@ -6,7 +6,7 @@ import conf from "../../constants/config";
 import {IAddRoomClicked, modalActions} from "./modal-actions";
 
 
-const Modal: FC<{ visible: boolean, setVisible: React.Dispatch<React.SetStateAction<boolean>> | undefined }> = (
+const Modal: FC<{ visible: boolean, setVisible: Dispatch<SetStateAction<boolean>> | undefined }> = (
     {visible, setVisible}) => {
 
     const {room_id} = useParams()
@@ -17,15 +17,27 @@ const Modal: FC<{ visible: boolean, setVisible: React.Dispatch<React.SetStateAct
     const setVisibility = () => setVisible ? setVisible(false) : null
 
     const setUserName = () => {
-        if (input) clientContext.changeClient({...clientContext, name: input})
-        setVisibility()
+        if (!room_id || !clientContext.id) {
+            navigate(`../${conf.BASE_URL}`)
+            return
+        }
+        if (input) {
+            const client = {id: clientContext.id, name: input}
+            const observer = {
+                next: () => {
+                    clientContext.changeClient(client)
+                }
+            }
+            modalActions.updateUserName(room_id, client, observer)
+            setVisibility()
+        }
     }
 
     const addNewRoom = () => {
         const observer = {
             next: (data: IAddRoomClicked) => {
-                clientContext.changeClient({id: data.clientId, name: data.clientName})
-                navigate(`../${conf.BASE_URL}/${data.roomId}`)
+                clientContext.changeClient({id: data.clientId, name: input})
+                navigate(`../${conf.BASE_URL}${data.roomId}`)
             }
         }
         modalActions.addRoomClicked(input, observer);

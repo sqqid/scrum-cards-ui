@@ -26,6 +26,13 @@
     margin-top: auto;
 }
 
+.content__controls span {
+    display: flex;
+    height: 3rem;
+    justify-content: center;
+    justify-items: center;
+}
+
 .content__controls .btn {
     max-height: 3rem;
     background-color: var(--secondary-color-trans-15);
@@ -43,4 +50,6 @@
     font-size: 1rem;
     padding: 0 .4rem 0 .4rem;
     font-weight: 600;
+    justify-content: center;
+    align-items: center;
 }

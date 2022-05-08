@@ -1,10 +1,33 @@
-import {FC} from "react";
+import {Dispatch, FC, SetStateAction, useContext} from "react";
 import './picker-card.css'
+import {ICardState} from "../picker";
+import {pickerCardActions} from "./picker-card-actions";
+import {useParams} from "react-router-dom";
+import {ClientContext} from "../../../contexts/client-context";
 
-const PickerCard: FC<{ fib_num: (number | string), selected: boolean }> = ({fib_num, selected}) => {
+const PickerCard: FC<{ card: ICardState, setSelect: Dispatch<SetStateAction<ICardState | undefined>> }> = ({card, setSelect}) => {
+    const {room_id} = useParams()
+    const clientContext = useContext(ClientContext)
+
+    const toggleSelection = () => {
+
+        if (room_id && clientContext.id && setSelect) {
+            if (card.selected) {
+                pickerCardActions.removeCard(room_id, clientContext.id)
+                setSelect(undefined)
+            } else {
+                pickerCardActions.pickCard(room_id, clientContext.id, card.number)
+                setSelect({number: card.number, selected: !card.selected})
+            }
+        }
+    }
+
     return (
-        <div className={"picker__card" + (selected ? 'picker__card--selected' : '')}>
-            <span>{fib_num}</span>
+        <div
+            className={"picker__card" + (card.selected ? ' picker__card--selected' : '')}
+            onClick={toggleSelection}
+        >
+            <span>{card.number}</span>
         </div>
     )
 }
