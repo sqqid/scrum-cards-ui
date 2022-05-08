@@ -1,7 +1,7 @@
 import {FC, useContext, useEffect, useState} from "react";
 import './picker.css'
 import PickerCard from "./picker-card/picker-card";
-import {RoomStateContext} from "../../contexts/room-context";
+import {RoomStateContext, RoomStateEnum} from "../../contexts/room-context";
 
 export interface ICardState {
     number: string,
@@ -31,7 +31,7 @@ const Picker: FC = () => {
     }, [state])
 
     useEffect(() => {
-        if(roomStateContext.roomState) {
+        if(roomStateContext.roomState === RoomStateEnum.REVEAL) {
             setCards(initialCards)
         }
     }, [roomStateContext.setRoomState])

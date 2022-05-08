@@ -52,6 +52,14 @@ class SrumCardsApi {
         return this.stream
     }
 
+    disconnect(roomId: string, clientId: string) {
+        if (this.stream) {
+            this.stream.complete()
+            this.stream.unsubscribe()
+            this.stream = undefined
+        }
+    }
+
     private getObservable(endpint: string, method: REQUEST_METHOD): Observable<any> {
         const url = `http://${this.apiUrl}/${endpint}`
         return SrumCardsApi.fetchData(url, method)

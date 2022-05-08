@@ -56,14 +56,12 @@ const Content: FC = () => {
     const reveal = () => {
         if (room_id && roomStateContext.roomClients) {
             contentActions.reveal(room_id);
-            roomStateContext.setRoomState(RoomStateEnum.REVEAL, roomStateContext.roomClients)
         }
     }
 
     const newVoting = () => {
         if (room_id && roomStateContext.roomClients) {
             contentActions.newVoting(room_id);
-            roomStateContext.setRoomState(RoomStateEnum.PICK, roomStateContext.roomClients)
         }
     }
 
