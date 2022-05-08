@@ -14,11 +14,6 @@ interface IRoomClient {
 
 const contentActions = {
 
-    registerClient: (room_id: string, name: string, observer: { next: (clientId: string) => void }) => {
-        scrumCardsApi.registerClient(room_id, name)
-            .subscribe(observer)
-    },
-
     openStream: (roomId: string, clientId: string, observer: { next: (data: string) => void }) => {
         scrumCardsApi.openStrem(roomId, clientId)
             .subscribe(observer)

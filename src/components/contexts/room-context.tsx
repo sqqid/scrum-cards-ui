@@ -8,21 +8,29 @@ enum RoomStateEnum {
 
 interface IRoomStateContext {
     roomState: RoomStateEnum | undefined,
-    setRoomState: (state: RoomStateEnum) => void
+    roomClients: IRoomClient[] | undefined
+    setRoomState: (state: RoomStateEnum, clients: IRoomClient[]) => void
 }
 
-const RoomStateContext = createContext<IRoomStateContext>({roomState: RoomStateEnum.PICK, setRoomState: () => null})
+const RoomStateContext = createContext<IRoomStateContext>({
+    roomState: RoomStateEnum.PICK,
+    roomClients: [],
+    setRoomState: () => null
+})
 
 // @ts-ignore
 const RoomStateProvider = ({children}) => {
-    const [state, setState] = useState<RoomStateEnum>()
+    const [state, setState] = useState<{ roomState: RoomStateEnum | undefined, roomClients: IRoomClient[] | undefined }>({
+        roomState: undefined,
+        roomClients: undefined
+    })
 
-    const setRoomState = (state: RoomStateEnum) => {
-        setState(state)
+    const setRoomState = (newState: RoomStateEnum, newClients: IRoomClient[]) => {
+        setState({roomState: newState, roomClients: newClients})
     }
 
     return (
-        <RoomStateContext.Provider value={{roomState: state, setRoomState}}>
+        <RoomStateContext.Provider value={{roomState: state.roomState,roomClients: state.roomClients, setRoomState}}>
             {children}
         </RoomStateContext.Provider>
     )

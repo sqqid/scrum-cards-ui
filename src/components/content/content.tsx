@@ -6,13 +6,14 @@ import {ClientContext} from "../contexts/client-context";
 import {contentActions, IRoomState} from "./content-actions";
 import conf from "../../constants/config";
 import {RoomStateContext, RoomStateEnum} from "../contexts/room-context";
-
+import {ModalContext} from "../contexts/modal-context";
 
 const Content: FC = () => {
 
     const {room_id} = useParams()
     const clientContext = useContext(ClientContext)
     const roomStateContext = useContext(RoomStateContext)
+    const modalContext = useContext(ModalContext)
     const navigate = useNavigate()
     const [roomState, setRoomState] = useState<IRoomState>({state: RoomStateEnum.PICK, clients: []})
 
@@ -25,35 +26,44 @@ const Content: FC = () => {
         if (clientContext.id) {
             contentActions.openStream(room_id, clientContext.id, {
                 next: async (data) => {
+                    const roomData:IRoomState = JSON.parse(data)
+                    setRoomState(JSON.parse(data))
+                    if (roomStateContext) {
+                        roomStateContext.setRoomState(roomData.state as RoomStateEnum, roomData.clients)
+                    }
+                }
+            })
+        } else if (!clientContext.id && modalContext.setVisible) {
+            modalContext.setVisible(true)
+        }
+
+    }, [clientContext.changeClient])
+
+    useEffect(() => {
+        if (clientContext.id && room_id) {
+            contentActions.openStream(room_id, clientContext.id, {
+                next: async (data) => {
                     setRoomState(JSON.parse(data))
                 }
             })
-        } else if (!clientContext.id && clientContext.name) {
-            contentActions.registerClient(room_id, clientContext.name, {
-                next: (clientId) => {
-                    clientContext.changeClient({id: clientId, name: clientContext.name})
-                }
-            })
         }
-
-    }, [clientContext.changeClient, clientContext, navigate])
-
+    }, [clientContext.id])
 
     const selectedCard = useMemo(() =>
             roomState.clients.filter(client => client.selected).length > 0
         , [roomState.clients])
 
     const reveal = () => {
-        if (room_id) {
+        if (room_id && roomStateContext.roomClients) {
             contentActions.reveal(room_id);
-            roomStateContext.setRoomState(RoomStateEnum.REVEAL)
+            roomStateContext.setRoomState(RoomStateEnum.REVEAL, roomStateContext.roomClients)
         }
     }
 
     const newVoting = () => {
-        if (room_id) {
+        if (room_id && roomStateContext.roomClients) {
             contentActions.newVoting(room_id);
-            roomStateContext.setRoomState(RoomStateEnum.PICK)
+            roomStateContext.setRoomState(RoomStateEnum.PICK, roomStateContext.roomClients)
         }
     }
 
@@ -62,7 +72,7 @@ const Content: FC = () => {
             <div className="content__top">
                 <div className="content__controls">
                     {
-                        !selectedCard && RoomStateEnum.REVEAL !== roomState.state  ? <span>Pick your cards!</span> : null
+                        !selectedCard && clientContext.id && RoomStateEnum.REVEAL !== roomState.state ? <span>Pick your cards!</span> : null
                     }
                     {
                         RoomStateEnum.PICK === roomState.state && selectedCard ?
@@ -72,7 +82,7 @@ const Content: FC = () => {
                             : null
                     }
                     {
-                        RoomStateEnum.REVEAL === roomState.state?
+                        RoomStateEnum.REVEAL === roomState.state ?
                             <button className="btn" onClick={newVoting}>
                                 <span className="btn__span btn__span--controls">Start new voting</span>
                             </button>

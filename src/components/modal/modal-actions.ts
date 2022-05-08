@@ -22,7 +22,12 @@ const modalActions = {
     updateUserName: (roomId: string, client: { name: string; id: string }, observer: { next: () => void }) => {
         scrumCardsApi.changeClientName(roomId, client.id, client.name)
             .subscribe(observer)
-    }
+    },
+
+    registerClient: (room_id: string, name: string, observer: { next: (clientId: string) => void }) => {
+        scrumCardsApi.registerClient(room_id, name)
+            .subscribe(observer)
+    },
 }
 
 export {modalActions}
