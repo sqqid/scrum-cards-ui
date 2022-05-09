@@ -12,7 +12,7 @@ const Picker: FC = () => {
     const [state, setState] = useState<ICardState>()
     const roomStateContext = useContext(RoomStateContext)
 
-    const initialCards: ICardState[] = ['0', '1', '2', '3', '5', '8', '13', '21', '34', '55', '89', '?']
+    const initialCards: ICardState[] = ['0', '1', '2', '3', '5', '8', '13', '20', '40', '100', '?']
         .map(fib => {
             return {number: `${fib}`, selected: false}
         })
@@ -25,13 +25,13 @@ const Picker: FC = () => {
                 return card
             })
             setCards(newCards)
-        } else{
+        } else {
             setCards(initialCards)
         }
     }, [state])
 
     useEffect(() => {
-        if(roomStateContext.roomState === RoomStateEnum.REVEAL) {
+        if (roomStateContext.roomState === RoomStateEnum.REVEAL) {
             setCards(initialCards)
         }
     }, [roomStateContext.setRoomState])

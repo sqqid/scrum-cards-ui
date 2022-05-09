@@ -1,5 +1,5 @@
 import {map, mergeMap, of, zip} from "rxjs";
-import scrumCardsApi from "../../services/srum-cards-api";
+import scrumCardsApi from "../../services/scrum-cards-api";
 
 interface IAddRoomClicked {
     clientId: string;

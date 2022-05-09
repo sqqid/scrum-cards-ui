@@ -1,6 +1,7 @@
 import {FC, useContext, useMemo} from "react";
 import './summary.css'
 import {RoomStateContext} from "../../contexts/room-context";
+import {roundToTwo} from "../../../utils/math-functions";
 
 const Summary: FC = () => {
     const roomStateContext = useContext(RoomStateContext)
@@ -11,11 +12,11 @@ const Summary: FC = () => {
             .filter(score => !isNaN(parseInt(score)))
             .map(score => parseInt(score, 10))
 
-        return validNumbers ? validNumbers.reduce((a,b) => a + b) / validNumbers.length : 0
+        return validNumbers && validNumbers.length > 0 ? validNumbers.reduce((a,b) => a + b) / validNumbers.length : 0
     }, [roomStateContext])
 
     return (
-        <span className="summary__span">{calculateAverage}</span>
+        <span className="summary__span">{roundToTwo(calculateAverage)}</span>
     )
 }
 

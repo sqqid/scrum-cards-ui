@@ -1,4 +1,4 @@
-import scrumCardsApi from "../../../../services/srum-cards-api";
+import scrumCardsApi from "../../../../services/scrum-cards-api";
 
 const pickerCardActions = {
 

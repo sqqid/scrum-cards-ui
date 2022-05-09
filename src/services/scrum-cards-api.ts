@@ -7,13 +7,13 @@ enum REQUEST_METHOD {
     DELETE = 'DELETE'
 }
 
-class SrumCardsApi {
+class ScrumCardsApi {
 
     private readonly apiUrl: string
     private stream: WebSocketSubject<any> | undefined
 
     constructor() {
-        this.apiUrl = `${process.env.REACT_APP_SCRUM_CARDS_ENDPOING}/api/v1`
+        this.apiUrl = `${process.env.REACT_APP_SCRUM_CARDS_ENDPOINT}/api/v1`
     }
 
     createRoom(): Observable<string> {
@@ -66,7 +66,7 @@ class SrumCardsApi {
 
     private getObservable(endpint: string, method: REQUEST_METHOD): Observable<any> {
         const url = `http://${this.apiUrl}/${endpint}`
-        return SrumCardsApi.fetchData(url, method)
+        return ScrumCardsApi.fetchData(url, method)
     }
 
     private static fetchData(url: string, method: REQUEST_METHOD) {
@@ -80,5 +80,5 @@ class SrumCardsApi {
 
 }
 
-const scrumCardsApi = new SrumCardsApi()
+const scrumCardsApi = new ScrumCardsApi()
 export default scrumCardsApi
