@@ -1,39 +1,39 @@
-import {createContext, useState} from "react";
+import { createContext, useState } from "react";
 
 interface IClient {
-    id: string | undefined,
-    name: string | undefined
-    changeClient: ({id, name}: { id?: string, name?: string }) => void
+  id: string | undefined,
+  name: string | undefined
+  changeClient: ({ id, name }: { id?: string, name?: string }) => void
 }
 
 interface IClientState {
-    id: string | undefined,
-    name: string | undefined
+  id: string | undefined,
+  name: string | undefined
 }
 
 const ClientContext = createContext<IClient>({
-    id: undefined,
-    name: undefined,
-    changeClient: () => null
+  id: undefined,
+  name: undefined,
+  changeClient: () => null
 })
 
 // @ts-ignore
-const ClientProvider = ({children}) => {
-    const [client, setClient] = useState<IClientState>({
-        id: undefined,
-        name: undefined
-    });
+const ClientProvider = ({ children }) => {
+  const [client, setClient] = useState<IClientState>({
+    id: undefined,
+    name: undefined
+  });
 
-    const changeClient = ({id, name}: { id?: string, name?: string }) => {
-        setClient({id: id, name: name})
-    }
+  const changeClient = ({ id, name }: { id?: string, name?: string }) => {
+    setClient({ id: id, name: name })
+  }
 
-    return (
-        <ClientContext.Provider value={{id: client.id, name: client.name, changeClient}}>
-            {children}
-        </ClientContext.Provider>
-    )
+  return (
+    <ClientContext.Provider value={{ id: client.id, name: client.name, changeClient }}>
+      {children}
+    </ClientContext.Provider>
+  )
 }
 
-export {ClientContext, ClientProvider}
-export type {IClient};
+export { ClientContext, ClientProvider }
+export type { IClient };
