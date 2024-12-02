@@ -1,5 +1,6 @@
 import { from, mergeAll, Observable } from "rxjs";
 import { webSocket, WebSocketSubject } from "rxjs/webSocket";
+import conf from "../constants/config";
 
 enum REQUEST_METHOD {
   PUT = 'PUT',
@@ -13,7 +14,7 @@ class ScrumCardsApi {
   private stream: WebSocketSubject<any> | undefined
 
   constructor() {
-    this.apiUrl = import.meta.env.VITE_API_URL
+    this.apiUrl = `${conf.BASE_URL}${conf.API}`
   }
 
   createRoom(): Observable<string> {

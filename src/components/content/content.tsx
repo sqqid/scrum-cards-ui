@@ -1,13 +1,13 @@
 import { FC, useContext, useEffect, useMemo, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import conf from "../../constants/config";
+import scrumCardsApi from "../../services/scrum-cards-api";
+import { ClientContext } from "../contexts/client-context";
+import { ModalContext } from "../contexts/modal-context";
+import { RoomStateContext, RoomStateEnum } from "../contexts/room-context";
+import { contentActions, IRoomState } from "./content-actions";
 import './content.css';
 import Table from "./table/table";
-import { useNavigate, useParams } from "react-router-dom";
-import { ClientContext } from "../contexts/client-context";
-import { contentActions, IRoomState } from "./content-actions";
-import conf from "../../constants/config";
-import { RoomStateContext, RoomStateEnum } from "../contexts/room-context";
-import { ModalContext } from "../contexts/modal-context";
-import scrumCardsApi from "../../services/scrum-cards-api";
 
 const Content: FC = () => {
 
@@ -20,7 +20,7 @@ const Content: FC = () => {
 
   useEffect(() => {
     if (!room_id) {
-      navigate(`../${conf.BASE_URL}`)
+      navigate(`../`)
       return
     }
 
