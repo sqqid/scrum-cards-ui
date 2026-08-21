@@ -1,4 +1,4 @@
-import { from, mergeAll, Observable } from "rxjs";
+import { from, Observable } from "rxjs";
 import { webSocket, WebSocketSubject } from "rxjs/webSocket";
 import conf from "../constants/config";
 
@@ -14,41 +14,64 @@ class ScrumCardsApi {
   private stream: WebSocketSubject<any> | undefined
 
   constructor() {
-    this.apiUrl = `${conf.BASE_URL}${conf.API}`
+    this.apiUrl = `${conf.API_URL}`
   }
 
   createRoom(): Observable<string> {
-    return this.getObservable('rooms', REQUEST_METHOD.PUT)
+    return this.getObservable('rooms/', REQUEST_METHOD.PUT)
   }
 
   registerClient(roomId: string, name: string): Observable<string> {
-    return this.getObservable(`rooms/${roomId}/clients/${name}`, REQUEST_METHOD.PUT)
+    return this.getObservable(`rooms/${roomId}/clients/${name}/`, REQUEST_METHOD.PUT)
   }
 
   changeClientName(roomId: string, clientId: string, name: string): Observable<string> {
-    return this.getObservable(`rooms/${roomId}/clients/${clientId}/${name}`, REQUEST_METHOD.PUT)
+    return this.getObservable(`rooms/${roomId}/clients/${clientId}/${name}/`, REQUEST_METHOD.PUT)
   }
 
   addScore(roomId: string, clientId: string, score: string): Observable<string> {
     score = score === '?' ? '%3F' : score
-    return this.getObservable(`rooms/${roomId}/clients/${clientId}/score/${score}`, REQUEST_METHOD.PUT)
+    return this.getObservable(`rooms/${roomId}/clients/${clientId}/score/${score}/`, REQUEST_METHOD.PUT)
   }
 
   removeScore(roomId: string, clientId: string): Observable<string> {
-    return this.getObservable(`rooms/${roomId}/clients/${clientId}/score`, REQUEST_METHOD.DELETE)
+    return this.getObservable(`rooms/${roomId}/clients/${clientId}/score/`, REQUEST_METHOD.DELETE)
   }
 
   pick(roomId: string): Observable<null> {
-    return this.getObservable(`rooms/${roomId}/pick`, REQUEST_METHOD.GET)
+    return this.getObservable(`rooms/${roomId}/pick/`, REQUEST_METHOD.GET)
   }
 
   reveal(roomId: string): Observable<null> {
-    return this.getObservable(`rooms/${roomId}/reveal`, REQUEST_METHOD.GET)
+    return this.getObservable(`rooms/${roomId}/reveal/`, REQUEST_METHOD.GET)
+  }
+
+  openEventStrem(roomId: string, clientId: string): Observable<any> {
+    return new Observable<any>(observer => {
+      const eventSource = new EventSource(`http://${this.apiUrl}/rooms/${roomId}/clients/${clientId}/event/`);
+      eventSource.onmessage = (event) => {
+        observer.next(event.data);
+      };
+
+      eventSource.onerror = (error) => {
+        if (eventSource.readyState === EventSource.CLOSED) {
+          observer.complete();
+        } else {
+          observer.error(error);
+        }
+      };
+
+      return () => {
+        if (eventSource.readyState !== EventSource.CLOSED) {
+          eventSource.close();
+        }
+      };
+    });
   }
 
   openStrem(roomId: string, clientId: string): WebSocketSubject<any> {
     if (!this.stream) {
-      this.stream = webSocket(`ws://${this.apiUrl}/rooms/${roomId}/clients/${clientId}/ws`)
+      this.stream = webSocket(`ws://localhost:8080/api/rooms/${roomId}/clients/${clientId}/ws`)
     }
     return this.stream
   }

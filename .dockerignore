@@ -1,14 +1,15 @@
+# build n modules
+/build
 /node_modules
-#/build
 
-.env.local
-.env.prod
+# env
+.env
+.env.*
 
 # idea
 *.iml
 .idea
 
-.dockerignore
+# .dockerignore
 Dockerfile
-Dockerfile.dev
-Dockerfile.prod
+Dockerfile.*

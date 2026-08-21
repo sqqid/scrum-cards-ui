@@ -21,6 +21,7 @@
     text-align: center;
     text-decoration: none;
     transition: all .09s linear;
+    user-select: none;
 }
 
 .picker__card:not(.picker__card--selected):hover {

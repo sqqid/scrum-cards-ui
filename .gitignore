@@ -1,8 +1,18 @@
-/node_modules
+# build n modules
 /build
-/dist
+/node_modules
+
+# env
+.env
 .env.*
 
-
+# idea
 *.iml
-.idea/*
+.idea
+
+# .dockerignore
+Dockerfile
+Dockerfile.*
+
+learning/
+issues/
