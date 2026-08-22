@@ -31,10 +31,10 @@ const Picker: FC = () => {
 
   useEffect(() => {
     if (state) {
-      const newCards = cards.map((card) => {
-        card.selected = state.number === card.number;
-        return card;
-      });
+      const newCards = cards.map((card) => ({
+        ...card,
+        selected: state.number === card.number,
+      }));
       setCards(newCards);
     } else {
       setCards(initialCards);
@@ -49,8 +49,8 @@ const Picker: FC = () => {
 
   return (
     <div className="picker">
-      {cards.map((card, index) => {
-        return <PickerCard key={index} card={card} setSelect={setState} />;
+      {cards.map((card) => {
+        return <PickerCard key={card.number} card={card} setSelect={setState} />;
       })}
     </div>
   );
