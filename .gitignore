@@ -1,5 +1,6 @@
 # build n modules
 /build
+/coverage
 /node_modules
 
 # env

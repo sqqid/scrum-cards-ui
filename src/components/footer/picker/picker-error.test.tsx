@@ -56,8 +56,7 @@ const renderPicker = () =>
     </MemoryRouter>
   );
 
-const card = (number: string) =>
-  screen.getByText(number).closest(".picker__card") as HTMLElement;
+const card = (number: string) => screen.getByText(number).closest(".picker__card") as HTMLElement;
 
 afterEach(() => {
   cleanup();

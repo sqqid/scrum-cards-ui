@@ -43,10 +43,7 @@ describe("modalActions", () => {
     createRoomSpy.mockReturnValue(throwError(() => new Error("room creation failed")));
     const observer = { next: vi.fn(), error: vi.fn() };
     modalActions.addRoomClicked("tester", observer);
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      "Failed to create room:",
-      expect.any(Error)
-    );
+    expect(consoleErrorSpy).toHaveBeenCalledWith("Failed to create room:", expect.any(Error));
     expect(observer.error).toHaveBeenCalledTimes(1);
     expect(observer.error.mock.calls[0][0].message).toBe("room creation failed");
     expect(observer.next).not.toHaveBeenCalled();
@@ -57,10 +54,7 @@ describe("modalActions", () => {
     registerClientSpy.mockReturnValue(throwError(() => new Error("client registration failed")));
     const observer = { next: vi.fn(), error: vi.fn() };
     modalActions.addRoomClicked("tester", observer);
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      "Failed to create room:",
-      expect.any(Error)
-    );
+    expect(consoleErrorSpy).toHaveBeenCalledWith("Failed to create room:", expect.any(Error));
     expect(observer.error).toHaveBeenCalledTimes(1);
     expect(observer.error.mock.calls[0][0].message).toBe("client registration failed");
     expect(observer.next).not.toHaveBeenCalled();
@@ -93,10 +87,7 @@ describe("modalActions", () => {
     const observer = { next: vi.fn(), error: vi.fn() };
     modalActions.registerClient("room123", "tester", observer);
     expect(registerClientSpy).toHaveBeenCalledWith("room123", "tester");
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      "Failed to register client:",
-      expect.any(Error)
-    );
+    expect(consoleErrorSpy).toHaveBeenCalledWith("Failed to register client:", expect.any(Error));
     expect(observer.error).toHaveBeenCalledTimes(1);
     expect(observer.error.mock.calls[0][0].message).toBe("registration failed");
   });

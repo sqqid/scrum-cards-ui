@@ -4,11 +4,7 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import Picker from "./picker";
 import { ClientContext, ClientProvider } from "../../contexts/client-context";
-import {
-  RoomStateContext,
-  RoomStateProvider,
-  RoomStateEnum,
-} from "../../contexts/room-context";
+import { RoomStateContext, RoomStateProvider, RoomStateEnum } from "../../contexts/room-context";
 import { pickerCardActions } from "./picker-card/picker-card-actions";
 
 vi.mock("./picker-card/picker-card-actions", () => ({

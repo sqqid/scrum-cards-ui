@@ -27,12 +27,9 @@ const RoomStateProvider: FC<{ children: ReactNode }> = ({ children }) => {
     roomClients: undefined,
   });
 
-  const setRoomState = useCallback(
-    (newState: RoomStateEnum, newClients: IRoomClient[]) => {
-      setState({ roomState: newState, roomClients: newClients });
-    },
-    []
-  );
+  const setRoomState = useCallback((newState: RoomStateEnum, newClients: IRoomClient[]) => {
+    setState({ roomState: newState, roomClients: newClients });
+  }, []);
 
   return (
     <RoomStateContext.Provider

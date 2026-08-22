@@ -32,10 +32,7 @@ describe("contentActions", () => {
     const onError = vi.fn();
     contentActions.reveal("room123", onError);
     expect(revealSpy).toHaveBeenCalledWith("room123");
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      "Failed to reveal cards:",
-      expect.any(Error)
-    );
+    expect(consoleErrorSpy).toHaveBeenCalledWith("Failed to reveal cards:", expect.any(Error));
     expect(onError).toHaveBeenCalledTimes(1);
     expect(onError.mock.calls[0][0].message).toBe("room not found");
   });
@@ -51,10 +48,7 @@ describe("contentActions", () => {
     const onError = vi.fn();
     contentActions.newVoting("room123", onError);
     expect(pickSpy).toHaveBeenCalledWith("room123");
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      "Failed to start new voting:",
-      expect.any(Error)
-    );
+    expect(consoleErrorSpy).toHaveBeenCalledWith("Failed to start new voting:", expect.any(Error));
     expect(onError).toHaveBeenCalledTimes(1);
     expect(onError.mock.calls[0][0].message).toBe("room not found");
   });
