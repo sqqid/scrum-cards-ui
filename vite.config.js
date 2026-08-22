@@ -3,7 +3,6 @@ import { defineConfig, loadEnv } from 'vite';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  console.log(env.VITE_API_URL)
   return {
     build: {
       outDir: 'build',
@@ -26,21 +25,8 @@ export default defineConfig(({ mode }) => {
     server: {
       proxy: {
         '/api': {
-          target: env.VITE_PROXY_TARGET || env.VITE_API_URL,
+          target: env.VITE_API_URL || 'http://localhost:8080',
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, ''),
-
-          configure: (proxy, _) => {
-            proxy.on('error', (err, _req, _res) => {
-              console.log('error', err);
-            });
-            proxy.on('proxyReq', (_, req, _res) => {
-              console.log('Request sent to target:', req.method, req.url);
-            });
-            proxy.on('proxyRes', (proxyRes, req, _res) => {
-              console.log('Response received from target:', proxyRes.statusCode, req.url);
-            });
-          },
         },
       },
     },
