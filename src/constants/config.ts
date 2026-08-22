@@ -4,6 +4,9 @@ export const conf = {
   // (Vite dev proxy in dev, nginx in production). The protocol always follows
   // the current page (see scrum-cards-api.ts) so HTTPS never mixes content.
   API_URL: import.meta.env.VITE_API_URL || window.location.host + "/api",
+  // How many times the UI re-registers the client after a room event stream
+  // fails before giving up and surfacing the error (ADR 0005).
+  MAX_REJOIN_ATTEMPTS: 3,
 };
 
 export default conf;

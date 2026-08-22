@@ -9,15 +9,17 @@ import { ClientContext, ClientProvider } from "../contexts/client-context";
 import { ModalContextProvider } from "../contexts/modal-context";
 import { RoomStateProvider } from "../contexts/room-context";
 
-const { openEventStreamSpy, revealSpy } = vi.hoisted(() => ({
+const { openEventStreamSpy, revealSpy, registerClientSpy } = vi.hoisted(() => ({
   openEventStreamSpy: vi.fn(),
   revealSpy: vi.fn(),
+  registerClientSpy: vi.fn(),
 }));
 
 vi.mock("../../services/scrum-cards-api", () => ({
   default: {
     openEventStream: (roomId: string, clientId: string) => openEventStreamSpy(roomId, clientId),
     reveal: (roomId: string) => revealSpy(roomId),
+    registerClient: (roomId: string, name: string) => registerClientSpy(roomId, name),
   },
 }));
 
@@ -66,6 +68,7 @@ beforeEach(() => {
   openEventStreamSpy.mockClear();
   openEventStreamSpy.mockReturnValue(broadcastWithSelectedClient());
   revealSpy.mockClear();
+  registerClientSpy.mockClear();
 });
 
 describe("content error feedback", () => {
@@ -82,14 +85,15 @@ describe("content error feedback", () => {
     expect(await screen.findByText("reveal failed")).toBeTruthy();
   });
 
-  it("shows the error message when the room event stream fails", async () => {
+  it("shows the error message when the room event stream fails and rejoining is exhausted", async () => {
     openEventStreamSpy.mockReturnValue(throwError(() => new Error("stream failed")));
+    registerClientSpy.mockReturnValue(throwError(() => new Error("room not found")));
     render(
       <MemoryRouter initialEntries={["/room123"]}>
         <ContentHarness />
       </MemoryRouter>
     );
     fireEvent.click(screen.getByTestId("set-client"));
-    expect(await screen.findByText("stream failed")).toBeTruthy();
+    expect(await screen.findByText("room not found")).toBeTruthy();
   });
 });

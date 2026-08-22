@@ -1,16 +1,18 @@
-import { FC, useContext, useEffect, useMemo, useState } from "react";
+import { FC, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ClientContext } from "../contexts/client-context";
 import { ModalContext } from "../contexts/modal-context";
 import { RoomStateContext, RoomStateEnum } from "../contexts/room-context";
 import { contentActions, IRoomState } from "./content-actions";
 import ErrorNotice from "../error-notice/error-notice";
+import conf from "../../constants/config";
+import storage from "../../constants/local-storage";
 import "./content.css";
 import Table from "./table/table";
 
 const Content: FC = () => {
   const { room_id } = useParams();
-  const { id: clientId } = useContext(ClientContext);
+  const { id: clientId, name: clientName, changeClient } = useContext(ClientContext);
   const { roomClients, setRoomState: applyRoomState } = useContext(RoomStateContext);
   const { setVisible } = useContext(ModalContext);
   const navigate = useNavigate();
@@ -19,6 +21,44 @@ const Content: FC = () => {
     clients: [],
   });
   const [error, setError] = useState<string>();
+  const clientNameRef = useRef(clientName);
+  clientNameRef.current = clientName;
+  const rejoinAttempts = useRef(0);
+  const lastRoomId = useRef<string | undefined>(undefined);
+
+  // The backend removes a Client when its stream disconnects (ADR 0005), so a
+  // failed stream strands the participant: re-register a new Client with the
+  // same display name and let the stream effect open a fresh stream. Score and
+  // Selected do not survive the rejoin.
+  const rejoin = useCallback(
+    (err: Error) => {
+      if (!room_id) {
+        return;
+      }
+      const attemptRejoin = (currentErr: Error) => {
+        if (rejoinAttempts.current >= conf.MAX_REJOIN_ATTEMPTS) {
+          setError(currentErr.message);
+          return;
+        }
+        rejoinAttempts.current += 1;
+        const name = clientNameRef.current || localStorage.getItem(storage.CLIENT_NAME);
+        if (!name) {
+          setError(currentErr.message);
+          return;
+        }
+        contentActions.rejoinClient(room_id, name, {
+          next: (newClientId: string) => {
+            changeClient({ id: newClientId, name });
+          },
+          error: (regErr: Error) => {
+            attemptRejoin(regErr);
+          },
+        });
+      };
+      attemptRejoin(err);
+    },
+    [room_id, changeClient]
+  );
 
   useEffect(() => {
     if (!room_id) {
@@ -26,21 +66,29 @@ const Content: FC = () => {
       return;
     }
 
+    if (lastRoomId.current !== room_id) {
+      lastRoomId.current = room_id;
+      rejoinAttempts.current = 0;
+    }
+
     if (clientId) {
+      // A failed stream terminates its subscription, which closes the
+      // EventSource; the effect cleanup below closes it on rejoin/unmount.
       const subscription = contentActions.openStream(room_id, clientId, {
         next: (data) => {
+          rejoinAttempts.current = 0;
           const roomData: IRoomState = JSON.parse(data);
           setRoomState(roomData);
           applyRoomState(roomData.state as RoomStateEnum, roomData.clients);
           setError(undefined);
         },
-        error: (err) => setError(err.message),
+        error: (err) => rejoin(err),
       });
       return () => subscription.unsubscribe();
     } else {
       setVisible(true);
     }
-  }, [room_id, clientId, applyRoomState, setVisible, navigate]);
+  }, [room_id, clientId, applyRoomState, setVisible, navigate, rejoin]);
 
   const selectedCard = useMemo(
     () => roomState.clients.filter((client) => client.selected).length > 0,

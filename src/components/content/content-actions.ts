@@ -28,6 +28,20 @@ const contentActions = {
     });
   },
 
+  rejoinClient: (
+    roomId: string,
+    name: string,
+    observer: { next: (clientId: string) => void; error?: (error: Error) => void }
+  ) => {
+    scrumCardsApi.registerClient(roomId, name).subscribe({
+      next: (clientId: string) => observer.next(clientId),
+      error: (err: Error) => {
+        console.error("Failed to rejoin room:", err);
+        observer.error?.(err);
+      },
+    });
+  },
+
   reveal: (roomId: string, onError?: (error: Error) => void) => {
     scrumCardsApi.reveal(roomId).subscribe({
       next: () => null,

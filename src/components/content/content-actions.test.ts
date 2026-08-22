@@ -2,10 +2,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { of, throwError } from "rxjs";
 import { contentActions } from "./content-actions";
 
-const { revealSpy, pickSpy, openEventStreamSpy } = vi.hoisted(() => ({
+const { revealSpy, pickSpy, openEventStreamSpy, registerClientSpy } = vi.hoisted(() => ({
   revealSpy: vi.fn(),
   pickSpy: vi.fn(),
   openEventStreamSpy: vi.fn(),
+  registerClientSpy: vi.fn(),
 }));
 
 vi.mock("../../services/scrum-cards-api", () => ({
@@ -13,6 +14,7 @@ vi.mock("../../services/scrum-cards-api", () => ({
     reveal: (roomId: string) => revealSpy(roomId),
     pick: (roomId: string) => pickSpy(roomId),
     openEventStream: (roomId: string, clientId: string) => openEventStreamSpy(roomId, clientId),
+    registerClient: (roomId: string, name: string) => registerClientSpy(roomId, name),
   },
 }));
 
@@ -78,5 +80,24 @@ describe("contentActions", () => {
     );
     expect(observer.error).toHaveBeenCalledTimes(1);
     expect(observer.error.mock.calls[0][0].message).toBe("stream failed");
+  });
+
+  it("rejoinClient reports the new client id on success", () => {
+    registerClientSpy.mockReturnValue(of("client-2"));
+    const onNext = vi.fn();
+    contentActions.rejoinClient("room123", "tester", { next: onNext });
+    expect(registerClientSpy).toHaveBeenCalledWith("room123", "tester");
+    expect(onNext).toHaveBeenCalledWith("client-2");
+    expect(consoleErrorSpy).not.toHaveBeenCalled();
+  });
+
+  it("rejoinClient logs the error and reports it to the error handler", () => {
+    registerClientSpy.mockReturnValue(throwError(() => new Error("room not found")));
+    const onError = vi.fn();
+    contentActions.rejoinClient("room123", "tester", { next: vi.fn(), error: onError });
+    expect(registerClientSpy).toHaveBeenCalledWith("room123", "tester");
+    expect(consoleErrorSpy).toHaveBeenCalledWith("Failed to rejoin room:", expect.any(Error));
+    expect(onError).toHaveBeenCalledTimes(1);
+    expect(onError.mock.calls[0][0].message).toBe("room not found");
   });
 });
