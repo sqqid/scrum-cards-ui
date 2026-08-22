@@ -1,22 +1,15 @@
 import { FC, useContext, useMemo } from "react";
 import "./summary.css";
 import { RoomStateContext } from "../../contexts/room-context";
-import { roundToTwo } from "../../../utils/math-functions";
+import { averageOfScores, roundToTwo } from "../../../utils/math-functions";
 
 const Summary: FC = () => {
   const roomStateContext = useContext(RoomStateContext);
 
-  const calculateAverage = useMemo(() => {
-    const validNumbers = roomStateContext.roomClients
-      ?.map((client) => client.score)
-      .filter((score) => score)
-      .filter((score) => !isNaN(parseInt(score)))
-      .map((score) => parseInt(score, 10));
-
-    return validNumbers && validNumbers.length > 0
-      ? validNumbers.reduce((a, b) => a + b) / validNumbers.length
-      : 0;
-  }, [roomStateContext]);
+  const calculateAverage = useMemo(
+    () => averageOfScores(roomStateContext.roomClients?.map((client) => client.score) ?? []),
+    [roomStateContext]
+  );
 
   return <span className="summary__span">{roundToTwo(calculateAverage)}</span>;
 };
