@@ -1,6 +1,7 @@
 import { FC, useContext, useEffect, useState } from "react";
 import "./picker.css";
 import PickerCard from "./picker-card/picker-card";
+import ErrorNotice from "../../error-notice/error-notice";
 import { RoomStateContext, RoomStateEnum } from "../../contexts/room-context";
 
 export interface ICardState {
@@ -10,6 +11,7 @@ export interface ICardState {
 
 const Picker: FC = () => {
   const [state, setState] = useState<ICardState>();
+  const [error, setError] = useState<string>();
   const { roomState } = useContext(RoomStateContext);
 
   const initialCards: ICardState[] = [
@@ -52,8 +54,16 @@ const Picker: FC = () => {
 
   return (
     <div className="picker">
+      <ErrorNotice message={error} />
       {cards.map((card) => {
-        return <PickerCard key={card.number} card={card} setSelect={setState} />;
+        return (
+          <PickerCard
+            key={card.number}
+            card={card}
+            setSelect={setState}
+            onError={(err) => setError(err.message)}
+          />
+        );
       })}
     </div>
   );

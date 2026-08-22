@@ -81,7 +81,12 @@ describe("picker", () => {
     fireEvent.click(screen.getByTestId("set-client"));
     const card = selectedCard("5");
     fireEvent.click(card);
-    expect(pickerCardActions.pickCard).toHaveBeenCalledWith("room123", "client-1", "5");
+    expect(pickerCardActions.pickCard).toHaveBeenCalledWith(
+      "room123",
+      "client-1",
+      "5",
+      expect.any(Function)
+    );
     expect(card.className).toContain("picker__card--selected");
     fireEvent.click(screen.getByTestId("reveal"));
     expect(card.className).not.toContain("picker__card--selected");

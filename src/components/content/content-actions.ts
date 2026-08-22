@@ -17,9 +17,15 @@ const contentActions = {
   openStream: (
     roomId: string,
     clientId: string,
-    observer: { next: (data: string) => void }
+    observer: { next: (data: string) => void; error?: (error: Error) => void }
   ): Subscription => {
-    return scrumCardsApi.openEventStrem(roomId, clientId).subscribe(observer);
+    return scrumCardsApi.openEventStrem(roomId, clientId).subscribe({
+      next: (data: string) => observer.next(data),
+      error: (err: Error) => {
+        console.error("Failed to open room event stream:", err);
+        observer.error?.(err);
+      },
+    });
     // scrumCardsApi.openEventStrem(roomId, clientId)
     //   .subscribe(observer)
     // .pipe(
@@ -37,11 +43,23 @@ const contentActions = {
   //     .subscribe(observer)
   // },
 
-  reveal: (roomId: string) => {
-    scrumCardsApi.reveal(roomId).subscribe(() => null);
+  reveal: (roomId: string, onError?: (error: Error) => void) => {
+    scrumCardsApi.reveal(roomId).subscribe({
+      next: () => null,
+      error: (err: Error) => {
+        console.error("Failed to reveal cards:", err);
+        onError?.(err);
+      },
+    });
   },
-  newVoting: (roomId: string) => {
-    scrumCardsApi.pick(roomId).subscribe(() => null);
+  newVoting: (roomId: string, onError?: (error: Error) => void) => {
+    scrumCardsApi.pick(roomId).subscribe({
+      next: () => null,
+      error: (err: Error) => {
+        console.error("Failed to start new voting:", err);
+        onError?.(err);
+      },
+    });
   },
 };
 

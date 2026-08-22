@@ -5,12 +5,14 @@ import { ClientContext } from "../contexts/client-context";
 import { IAddRoomClicked, modalActions } from "./modal-actions";
 import storage from "../../constants/local-storage";
 import { ModalContext } from "../contexts/modal-context";
+import ErrorNotice from "../error-notice/error-notice";
 
 const Modal: FC = () => {
   const { room_id } = useParams();
   const { id: clientId, name: clientName, changeClient } = useContext(ClientContext);
   const { visible, setVisible } = useContext(ModalContext);
   const [input, setInput] = useState("");
+  const [error, setError] = useState<string>();
   const navigate = useNavigate();
 
   const setVisibility = () => setVisible(false);
@@ -26,7 +28,9 @@ const Modal: FC = () => {
         next: () => {
           changeClient(client);
           saveNameToLocalStorage(input);
+          setVisibility();
         },
+        error: (err: Error) => setError(err.message),
       };
       modalActions.updateUserName(room_id, client, observer);
     } else if (input && !clientId) {
@@ -34,26 +38,28 @@ const Modal: FC = () => {
         next: (newClientId) => {
           changeClient({ id: newClientId, name: input });
           saveNameToLocalStorage(input);
+          setVisibility();
         },
+        error: (err: Error) => setError(err.message),
       });
     }
-
-    setVisibility();
   };
 
   const addNewRoom = () => {
     const observer = {
       next: (data: IAddRoomClicked) => {
         changeClient({ id: data.clientId, name: input });
+        setVisibility();
         navigate(`../${data.roomId}`);
       },
+      error: (err: Error) => setError(err.message),
     };
     modalActions.addRoomClicked(input, observer);
-    setVisibility();
   };
 
   const inputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
+    setError(undefined);
   };
 
   useEffect(() => {
@@ -83,6 +89,7 @@ const Modal: FC = () => {
           <label>Your display name</label>
           <input type="text" value={input} onChange={inputChange} />
         </div>
+        <ErrorNotice message={error} />
         <div className="modal__buttons">
           <button className="btn" onClick={addNewRoom}>
             New room

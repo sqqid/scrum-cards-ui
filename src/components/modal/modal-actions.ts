@@ -7,7 +7,10 @@ interface IAddRoomClicked {
 }
 
 const modalActions = {
-  addRoomClicked: (clientName: string, observer: { next: (data: IAddRoomClicked) => void }) => {
+  addRoomClicked: (
+    clientName: string,
+    observer: { next: (data: IAddRoomClicked) => void; error?: (error: Error) => void }
+  ) => {
     scrumCardsApi
       .createRoom()
       .pipe(
@@ -19,23 +22,41 @@ const modalActions = {
           return { roomId, clientId };
         })
       )
-      .subscribe(observer);
+      .subscribe({
+        next: (data: IAddRoomClicked) => observer.next(data),
+        error: (err: Error) => {
+          console.error("Failed to create room:", err);
+          observer.error?.(err);
+        },
+      });
   },
 
   updateUserName: (
     roomId: string,
     client: { name: string; id: string },
-    observer: { next: () => void }
+    observer: { next: () => void; error?: (error: Error) => void }
   ) => {
-    scrumCardsApi.changeClientName(roomId, client.id, client.name).subscribe(observer);
+    scrumCardsApi.changeClientName(roomId, client.id, client.name).subscribe({
+      next: () => observer.next(),
+      error: (err: Error) => {
+        console.error("Failed to change client name:", err);
+        observer.error?.(err);
+      },
+    });
   },
 
   registerClient: (
     room_id: string,
     name: string,
-    observer: { next: (clientId: string) => void }
+    observer: { next: (clientId: string) => void; error?: (error: Error) => void }
   ) => {
-    scrumCardsApi.registerClient(room_id, name).subscribe(observer);
+    scrumCardsApi.registerClient(room_id, name).subscribe({
+      next: (clientId: string) => observer.next(clientId),
+      error: (err: Error) => {
+        console.error("Failed to register client:", err);
+        observer.error?.(err);
+      },
+    });
   },
 };
 

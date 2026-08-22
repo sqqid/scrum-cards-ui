@@ -116,9 +116,15 @@ class ScrumCardsApi {
       fetch(url, {
         method: method,
         headers: { "Content-type": "application/json; charset=UTF-8" },
+      }).then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) {
+          // The backend always answers errors with a JSON body carrying a
+          // message field (ADR 0004); surface it as the error message.
+          throw new Error(data?.message || `HTTP ${res.status}`);
+        }
+        return data;
       })
-        .then((res) => res.json())
-        .then((data) => data)
     );
   }
 }

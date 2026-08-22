@@ -4,6 +4,7 @@ import { ClientContext } from "../contexts/client-context";
 import { ModalContext } from "../contexts/modal-context";
 import { RoomStateContext, RoomStateEnum } from "../contexts/room-context";
 import { contentActions, IRoomState } from "./content-actions";
+import ErrorNotice from "../error-notice/error-notice";
 import "./content.css";
 import Table from "./table/table";
 
@@ -17,6 +18,7 @@ const Content: FC = () => {
     state: RoomStateEnum.PICK,
     clients: [],
   });
+  const [error, setError] = useState<string>();
 
   useEffect(() => {
     if (!room_id) {
@@ -30,7 +32,9 @@ const Content: FC = () => {
           const roomData: IRoomState = JSON.parse(data);
           setRoomState(roomData);
           applyRoomState(roomData.state as RoomStateEnum, roomData.clients);
+          setError(undefined);
         },
+        error: (err) => setError(err.message),
       });
       return () => subscription.unsubscribe();
     } else {
@@ -45,13 +49,13 @@ const Content: FC = () => {
 
   const reveal = () => {
     if (room_id && roomClients) {
-      contentActions.reveal(room_id);
+      contentActions.reveal(room_id, (err) => setError(err.message));
     }
   };
 
   const newVoting = () => {
     if (room_id && roomClients) {
-      contentActions.newVoting(room_id);
+      contentActions.newVoting(room_id, (err) => setError(err.message));
     }
   };
 
@@ -59,6 +63,7 @@ const Content: FC = () => {
     <div className="content">
       <div className="content__top">
         <div className="content__controls">
+          <ErrorNotice message={error} />
           {!selectedCard && clientId && RoomStateEnum.REVEAL !== roomState.state ? (
             <span>Pick your cards!</span>
           ) : null}
