@@ -1,53 +1,53 @@
 .table__card {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 0 1.2rem 0 1.2rem;
-    flex-grow: 0;
-    flex-shrink: 0;
-    margin-bottom: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 1.2rem 0 1.2rem;
+  flex-grow: 0;
+  flex-shrink: 0;
+  margin-bottom: 1.4rem;
 }
 
 .card__number {
-    display: flex;
-    height: 4.5rem;
-    width: 2rem;
-    justify-content: center;
-    align-items: center;
-    background-color: transparent;
-    border-style: solid;
-    border-width: 2px;
-    border-color: var(--primary-color);
-    border-radius: .8rem;
-    color: var(--primary-color);
-    font-size: 1.2rem;
-    font-weight: 700;
-    letter-spacing: .02em;
-    outline: 0;
-    padding: 0 1.2rem;
-    position: relative;
-    text-align: center;
-    text-decoration: none;
-    transition: all .09s linear;
+  display: flex;
+  height: 4.5rem;
+  width: 2rem;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  border-style: solid;
+  border-width: 2px;
+  border-color: var(--primary-color);
+  border-radius: 0.8rem;
+  color: var(--primary-color);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  outline: 0;
+  padding: 0 1.2rem;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.09s linear;
 }
 
 .card__number--selected {
-    background-color: var(--secondary-color);
+  background-color: var(--secondary-color);
 }
 
 .card__number--picking {
-    background-color: var(--secondary-color-trans-15);
+  background-color: var(--secondary-color-trans-15);
 }
 
 .card__name {
-    position: relative;
-    text-align: center;
-    font-size: 1rem;
-    font-weight: 600;
-    margin-top: .4rem;
-    max-width: 4.5rem;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  position: relative;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 0.4rem;
+  max-width: 4.5rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }

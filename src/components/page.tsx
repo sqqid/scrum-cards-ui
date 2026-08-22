@@ -1,5 +1,5 @@
 import { FC, useContext } from "react";
-import './page.css';
+import "./page.css";
 import Header from "./header/header";
 import Content from "./content/content";
 import Footer from "./footer/footer";
@@ -11,7 +11,7 @@ import { ModalContextProvider } from "./contexts/modal-context";
 import { ClientContext } from "./contexts/client-context";
 
 const Page: FC = () => {
-  const clientContext = useContext(ClientContext)
+  const clientContext = useContext(ClientContext);
 
   return (
     <ThemeProvider>
@@ -19,22 +19,23 @@ const Page: FC = () => {
         <div className="container">
           <Routes>
             <Route path="/" element={<Modal />} />
-            <Route path="/:room_id" element={
-              <RoomStateProvider>
-                <ModalContextProvider>
-                  <Header />
-                  <Content />
-                  {
-                    clientContext.id ? <Footer /> : null
-                  }
-                </ModalContextProvider>
-              </RoomStateProvider>
-            } />
+            <Route
+              path="/:room_id"
+              element={
+                <RoomStateProvider>
+                  <ModalContextProvider>
+                    <Header />
+                    <Content />
+                    {clientContext.id ? <Footer /> : null}
+                  </ModalContextProvider>
+                </RoomStateProvider>
+              }
+            />
           </Routes>
         </div>
       </BrowserRouter>
     </ThemeProvider>
   );
-}
+};
 
 export default Page;

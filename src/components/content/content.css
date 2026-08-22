@@ -1,55 +1,55 @@
 .content {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    flex-direction: column;
-    margin-bottom: 8rem;
-    flex-grow: 1;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 8rem;
+  flex-grow: 1;
 }
 
 .content__top {
-    margin-bottom: 5rem;
-    flex-grow: 1.6;
-    display: flex;
+  margin-bottom: 5rem;
+  flex-grow: 1.6;
+  display: flex;
 }
 
 .content__bottom {
-    flex-grow: 2;
-    display: flex;
+  flex-grow: 2;
+  display: flex;
 }
 
 .content__controls {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    margin-top: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-top: auto;
 }
 
 .content__controls span {
-    display: flex;
-    height: 3rem;
-    justify-content: center;
-    justify-items: center;
+  display: flex;
+  height: 3rem;
+  justify-content: center;
+  justify-items: center;
 }
 
 .content__controls .btn {
-    max-height: 3rem;
-    background-color: var(--secondary-color-trans-15);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  max-height: 3rem;
+  background-color: var(--secondary-color-trans-15);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .content__controls .btn:hover {
-    background-color: var(--secondary-color-trans-30);
+  background-color: var(--secondary-color-trans-30);
 }
 
 .btn__span--controls {
-    width: 10rem;
-    font-size: 1rem;
-    padding: 0 .4rem 0 .4rem;
-    font-weight: 600;
-    justify-content: center;
-    align-items: center;
+  width: 10rem;
+  font-size: 1rem;
+  padding: 0 0.4rem 0 0.4rem;
+  font-weight: 600;
+  justify-content: center;
+  align-items: center;
 }

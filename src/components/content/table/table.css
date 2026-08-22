@@ -1,9 +1,9 @@
 .table {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    letter-spacing: .02rem;
-    flex-wrap: wrap;
-    max-width: 800px;
-    margin-bottom: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  letter-spacing: 0.02rem;
+  flex-wrap: wrap;
+  max-width: 800px;
+  margin-bottom: auto;
 }

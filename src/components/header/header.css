@@ -1,35 +1,35 @@
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 8rem;
-    flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 8rem;
+  flex-shrink: 0;
 }
 
 .header .btn {
-    display: flex;
-    align-items: center;
-    max-height: 3.8rem;
+  display: flex;
+  align-items: center;
+  max-height: 3.8rem;
 }
 
 .btn__span--header {
-    max-width: 8rem;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  max-width: 8rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .header__left {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0 2rem 0 2rem;
-    font-size: 2.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 2rem 0 2rem;
+  font-size: 2.25rem;
 }
 
 .headr__right {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0 2rem 0 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 2rem 0 2rem;
 }

@@ -1,23 +1,20 @@
-import { catchError, retry } from "rxjs";
 import scrumCardsApi from "../../services/scrum-cards-api";
 
 interface IRoomState {
-  state: string,
-  clients: IRoomClient[]
+  state: string;
+  clients: IRoomClient[];
 }
 
 interface IRoomClient {
-  client_id: string,
-  client_name: string,
-  score: string,
-  selected: boolean
+  client_id: string;
+  client_name: string;
+  score: string;
+  selected: boolean;
 }
 
 const contentActions = {
-
   openStream: (roomId: string, clientId: string, observer: { next: (data: string) => void }) => {
-    scrumCardsApi.openEventStrem(roomId, clientId)
-      .subscribe(observer)
+    scrumCardsApi.openEventStrem(roomId, clientId).subscribe(observer);
     // scrumCardsApi.openEventStrem(roomId, clientId)
     //   .subscribe(observer)
     // .pipe(
@@ -36,14 +33,12 @@ const contentActions = {
   // },
 
   reveal: (roomId: string) => {
-    scrumCardsApi.reveal(roomId)
-      .subscribe(() => null)
+    scrumCardsApi.reveal(roomId).subscribe(() => null);
   },
   newVoting: (roomId: string) => {
-    scrumCardsApi.pick(roomId)
-      .subscribe(() => null)
-  }
-}
+    scrumCardsApi.pick(roomId).subscribe(() => null);
+  },
+};
 
 export { contentActions };
 export type { IRoomState, IRoomClient };
