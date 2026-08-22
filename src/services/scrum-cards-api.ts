@@ -1,6 +1,7 @@
 import { from, Observable } from "rxjs";
 import { webSocket, WebSocketSubject } from "rxjs/webSocket";
 import conf from "../constants/config";
+import { httpProtocol, resolveOrigin, webSocketProtocol } from "./api-url";
 
 enum REQUEST_METHOD {
   PUT = "PUT",
@@ -51,7 +52,7 @@ class ScrumCardsApi {
   openEventStrem(roomId: string, clientId: string): Observable<any> {
     return new Observable<any>((observer) => {
       const eventSource = new EventSource(
-        `http://${this.apiUrl}/rooms/${roomId}/clients/${clientId}/event/`
+        `${this.getApiOrigin()}/rooms/${roomId}/clients/${clientId}/event/`
       );
       eventSource.onmessage = (event) => {
         observer.next(event.data);
@@ -75,7 +76,9 @@ class ScrumCardsApi {
 
   openStrem(roomId: string, clientId: string): WebSocketSubject<any> {
     if (!this.stream) {
-      this.stream = webSocket(`ws://localhost:8080/api/rooms/${roomId}/clients/${clientId}/ws`);
+      this.stream = webSocket(
+        `${this.getWebSocketOrigin()}/rooms/${roomId}/clients/${clientId}/ws`
+      );
     }
     return this.stream;
   }
@@ -92,8 +95,19 @@ class ScrumCardsApi {
     return this.stream;
   }
 
+  // Origin for REST and SSE requests. The protocol follows the current page so
+  // HTTPS deployments never issue mixed (http) requests.
+  private getApiOrigin(): string {
+    return resolveOrigin(this.apiUrl, httpProtocol(window.location.protocol));
+  }
+
+  // Origin for the WebSocket stream. Uses wss on https pages and ws otherwise.
+  private getWebSocketOrigin(): string {
+    return resolveOrigin(this.apiUrl, webSocketProtocol(window.location.protocol));
+  }
+
   private getObservable(endpint: string, method: REQUEST_METHOD): Observable<any> {
-    const url = `http://${this.apiUrl}/${endpint}`;
+    const url = `${this.getApiOrigin()}/${endpint}`;
     return ScrumCardsApi.fetchData(url, method);
   }
 
