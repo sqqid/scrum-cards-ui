@@ -1,3 +1,4 @@
+import { Subscription } from "rxjs";
 import scrumCardsApi from "../../services/scrum-cards-api";
 
 interface IRoomState {
@@ -13,8 +14,12 @@ interface IRoomClient {
 }
 
 const contentActions = {
-  openStream: (roomId: string, clientId: string, observer: { next: (data: string) => void }) => {
-    scrumCardsApi.openEventStrem(roomId, clientId).subscribe(observer);
+  openStream: (
+    roomId: string,
+    clientId: string,
+    observer: { next: (data: string) => void }
+  ): Subscription => {
+    return scrumCardsApi.openEventStrem(roomId, clientId).subscribe(observer);
     // scrumCardsApi.openEventStrem(roomId, clientId)
     //   .subscribe(observer)
     // .pipe(

@@ -1,6 +1,5 @@
 import { FC, useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import scrumCardsApi from "../../services/scrum-cards-api";
 import { ClientContext } from "../contexts/client-context";
 import { ModalContext } from "../contexts/modal-context";
 import { RoomStateContext, RoomStateEnum } from "../contexts/room-context";
@@ -25,30 +24,21 @@ const Content: FC = () => {
       return;
     }
 
-    if (room_id && clientContext.id && !scrumCardsApi.getStream()) {
-      contentActions.openStream(room_id, clientContext.id, {
-        next: async (data) => {
+    if (clientContext.id) {
+      const subscription = contentActions.openStream(room_id, clientContext.id, {
+        next: (data) => {
           const roomData: IRoomState = JSON.parse(data);
-          setRoomState(JSON.parse(data));
+          setRoomState(roomData);
           if (roomStateContext) {
             roomStateContext.setRoomState(roomData.state as RoomStateEnum, roomData.clients);
           }
         },
       });
-    } else if (!clientContext.id && modalContext.setVisible) {
+      return () => subscription.unsubscribe();
+    } else if (modalContext.setVisible) {
       modalContext.setVisible(true);
     }
-  }, [clientContext.changeClient]);
-
-  useEffect(() => {
-    if (clientContext.id && room_id) {
-      contentActions.openStream(room_id, clientContext.id, {
-        next: async (data) => {
-          setRoomState(JSON.parse(data));
-        },
-      });
-    }
-  }, [clientContext.id]);
+  }, [room_id, clientContext.id]);
 
   const selectedCard = useMemo(
     () => roomState.clients.filter((client) => client.selected).length > 0,
