@@ -1,4 +1,4 @@
-import {createContext, useEffect, useState} from "react";
+import {createContext, useEffect, useState, FC, ReactNode} from "react";
 
 interface IModalState {
     visible: boolean,
@@ -10,8 +10,7 @@ const ModalContext = createContext<IModalState>({
     setVisible: () => null
 })
 
-// @ts-ignore
-const ModalContextProvider = ({children}) => {
+const ModalContextProvider: FC<{children: ReactNode}> = ({children}) => {
     const [state, setState] = useState<boolean>(false)
 
     const setVisible = (visible: boolean) => {

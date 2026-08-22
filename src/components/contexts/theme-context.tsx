@@ -1,4 +1,4 @@
-import {createContext, useEffect, useLayoutEffect, useState} from "react";
+import {createContext, useEffect, useLayoutEffect, useState, FC, ReactNode} from "react";
 import {storage} from "../../constants/local-storage";
 import {of} from "rxjs";
 
@@ -18,8 +18,7 @@ interface IThemeContext {
 
 const ThemeContext = createContext<IThemeContext>({theme: THEME.LIGHT, toggleTheme: () => null})
 
-// @ts-ignore
-const ThemeProvider = ({children}) => {
+const ThemeProvider: FC<{children: ReactNode}> = ({children}) => {
     const [theme, setTheme] = useState({theme: THEME.LIGHT});
 
     const toggleTheme = () => {

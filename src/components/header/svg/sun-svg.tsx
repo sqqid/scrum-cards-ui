@@ -1,4 +1,4 @@
-const SunSvg = () => {
+const SunSvg = (): JSX.Element => {
     return (
         <svg width="16" height="16" viewBox="0 0 24 24" focusable="false">
             <g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="currentColor" stroke="currentColor">

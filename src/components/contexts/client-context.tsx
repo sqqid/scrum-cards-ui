@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useState, FC, ReactNode } from "react";
 
 interface IClient {
   id: string | undefined,
@@ -17,8 +17,7 @@ const ClientContext = createContext<IClient>({
   changeClient: () => null
 })
 
-// @ts-ignore
-const ClientProvider = ({ children }) => {
+const ClientProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [client, setClient] = useState<IClientState>({
     id: undefined,
     name: undefined

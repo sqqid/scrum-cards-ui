@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useState, FC, ReactNode } from "react";
 import { IRoomClient } from "../content/content-actions";
 
 enum RoomStateEnum {
@@ -18,8 +18,7 @@ const RoomStateContext = createContext<IRoomStateContext>({
   setRoomState: () => null
 })
 
-// @ts-ignore
-const RoomStateProvider = ({ children }) => {
+const RoomStateProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [state, setState] = useState<{ roomState: RoomStateEnum | undefined, roomClients: IRoomClient[] | undefined }>({
     roomState: undefined,
     roomClients: undefined
