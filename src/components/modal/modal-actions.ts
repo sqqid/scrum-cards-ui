@@ -18,7 +18,6 @@ const modalActions = {
           return zip(of(roomId), scrumCardsApi.registerClient(roomId, clientName));
         }),
         map(([roomId, clientId]) => {
-          scrumCardsApi.disconnectStrem();
           return { roomId, clientId };
         })
       )

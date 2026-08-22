@@ -3,14 +3,10 @@
 // window) so they stay unit-testable in a non-DOM environment.
 //
 // The protocol always follows the current page so that HTTPS deployments never
-// issue mixed (http/ws) requests, which browsers block as mixed content.
+// issue mixed (http) requests, which browsers block as mixed content.
 
 export function httpProtocol(pageProtocol: string): string {
   return pageProtocol === "https:" ? "https:" : "http:";
-}
-
-export function webSocketProtocol(pageProtocol: string): string {
-  return pageProtocol === "https:" ? "wss:" : "ws:";
 }
 
 // Resolves a configured base URL (which may or may not carry a protocol) into

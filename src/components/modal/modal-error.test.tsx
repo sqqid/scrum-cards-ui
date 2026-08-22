@@ -7,17 +7,15 @@ import { of, throwError } from "rxjs";
 import Modal from "./modal";
 import { ClientContext, ClientProvider } from "../contexts/client-context";
 
-const { createRoomSpy, registerClientSpy, disconnectStremSpy } = vi.hoisted(() => ({
+const { createRoomSpy, registerClientSpy } = vi.hoisted(() => ({
   createRoomSpy: vi.fn(),
   registerClientSpy: vi.fn(),
-  disconnectStremSpy: vi.fn(),
 }));
 
 vi.mock("../../services/scrum-cards-api", () => ({
   default: {
     createRoom: () => createRoomSpy(),
     registerClient: (roomId: string, name: string) => registerClientSpy(roomId, name),
-    disconnectStrem: () => disconnectStremSpy(),
   },
 }));
 
@@ -76,7 +74,6 @@ beforeEach(() => {
   installLocalStorage();
   createRoomSpy.mockClear();
   registerClientSpy.mockClear();
-  disconnectStremSpy.mockClear();
 });
 
 describe("modal error feedback", () => {

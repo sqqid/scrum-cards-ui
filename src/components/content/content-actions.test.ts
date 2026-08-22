@@ -2,17 +2,17 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { of, throwError } from "rxjs";
 import { contentActions } from "./content-actions";
 
-const { revealSpy, pickSpy, openEventStremSpy } = vi.hoisted(() => ({
+const { revealSpy, pickSpy, openEventStreamSpy } = vi.hoisted(() => ({
   revealSpy: vi.fn(),
   pickSpy: vi.fn(),
-  openEventStremSpy: vi.fn(),
+  openEventStreamSpy: vi.fn(),
 }));
 
 vi.mock("../../services/scrum-cards-api", () => ({
   default: {
     reveal: (roomId: string) => revealSpy(roomId),
     pick: (roomId: string) => pickSpy(roomId),
-    openEventStrem: (roomId: string, clientId: string) => openEventStremSpy(roomId, clientId),
+    openEventStream: (roomId: string, clientId: string) => openEventStreamSpy(roomId, clientId),
   },
 }));
 
@@ -66,7 +66,7 @@ describe("contentActions", () => {
   });
 
   it("openStream forwards broadcast data to the observer", () => {
-    openEventStremSpy.mockReturnValue(of("payload"));
+    openEventStreamSpy.mockReturnValue(of("payload"));
     const observer = { next: vi.fn(), error: vi.fn() };
     contentActions.openStream("room123", "client-1", observer);
     expect(observer.next).toHaveBeenCalledWith("payload");
@@ -75,7 +75,7 @@ describe("contentActions", () => {
   });
 
   it("openStream logs stream errors and forwards them to the observer", () => {
-    openEventStremSpy.mockReturnValue(throwError(() => new Error("stream failed")));
+    openEventStreamSpy.mockReturnValue(throwError(() => new Error("stream failed")));
     const observer = { next: vi.fn(), error: vi.fn() };
     contentActions.openStream("room123", "client-1", observer);
     expect(consoleErrorSpy).toHaveBeenCalledWith(

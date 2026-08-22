@@ -45,4 +45,11 @@ describe("scrum-cards-api", () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new TypeError("Failed to fetch")));
     await expect(firstValueFrom(scrumCardsApi.createRoom())).rejects.toThrow("Failed to fetch");
   });
+
+  it("does not expose the removed websocket stream API", () => {
+    const api = scrumCardsApi as unknown as Record<string, unknown>;
+    expect(api.openStrem).toBeUndefined();
+    expect(api.disconnectStrem).toBeUndefined();
+    expect(api.getStream).toBeUndefined();
+  });
 });

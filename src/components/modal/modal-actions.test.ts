@@ -2,16 +2,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { of, throwError } from "rxjs";
 import { modalActions } from "./modal-actions";
 
-const {
-  createRoomSpy,
-  registerClientSpy,
-  changeClientNameSpy,
-  disconnectStremSpy,
-} = vi.hoisted(() => ({
+const { createRoomSpy, registerClientSpy, changeClientNameSpy } = vi.hoisted(() => ({
   createRoomSpy: vi.fn(),
   registerClientSpy: vi.fn(),
   changeClientNameSpy: vi.fn(),
-  disconnectStremSpy: vi.fn(),
 }));
 
 vi.mock("../../services/scrum-cards-api", () => ({
@@ -20,7 +14,6 @@ vi.mock("../../services/scrum-cards-api", () => ({
     registerClient: (roomId: string, name: string) => registerClientSpy(roomId, name),
     changeClientName: (roomId: string, clientId: string, name: string) =>
       changeClientNameSpy(roomId, clientId, name),
-    disconnectStrem: () => disconnectStremSpy(),
   },
 }));
 
@@ -43,7 +36,6 @@ describe("modalActions", () => {
     expect(registerClientSpy).toHaveBeenCalledWith("room-1", "tester");
     expect(observer.next).toHaveBeenCalledWith({ roomId: "room-1", clientId: "client-1" });
     expect(observer.error).not.toHaveBeenCalled();
-    expect(disconnectStremSpy).toHaveBeenCalled();
     expect(consoleErrorSpy).not.toHaveBeenCalled();
   });
 

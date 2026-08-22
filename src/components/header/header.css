@@ -27,7 +27,7 @@
   font-size: 2.25rem;
 }
 
-.headr__right {
+.header__right {
   display: flex;
   justify-content: center;
   align-items: center;

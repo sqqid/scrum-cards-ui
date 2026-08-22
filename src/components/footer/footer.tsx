@@ -7,7 +7,7 @@ import Summary from "./summary/summary";
 const Footer: FC = () => {
   const roomStateContext = useContext(RoomStateContext);
 
-  const decription = () => {
+  const description = () => {
     let text = "Choose your card :";
     if (roomStateContext.roomState) {
       switch (roomStateContext.roomState) {
@@ -25,7 +25,7 @@ const Footer: FC = () => {
 
   return (
     <div className="footer">
-      <span>{decription()}</span>
+      <span>{description()}</span>
       {!roomStateContext.roomState || roomStateContext.roomState === RoomStateEnum.PICK ? (
         <Picker />
       ) : (

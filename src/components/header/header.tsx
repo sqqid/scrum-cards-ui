@@ -25,7 +25,7 @@ const Header: FC = () => {
       <div className="header__left">
         <span>Scrum Cards</span>
       </div>
-      <div className="headr__right">
+      <div className="header__right">
         <button className="btn" onClick={() => themeContext.toggleTheme()}>
           <span className="btn__span btn__span--header">
             {themeContext.theme === THEME.LIGHT ? <MoonSvg /> : <SunSvg />}

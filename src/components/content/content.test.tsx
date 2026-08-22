@@ -7,12 +7,12 @@ import { ClientContext, ClientProvider } from "../contexts/client-context";
 import { ModalContextProvider } from "../contexts/modal-context";
 import { RoomStateProvider } from "../contexts/room-context";
 
-const { openEventStremSpy } = vi.hoisted(() => ({ openEventStremSpy: vi.fn() }));
+const { openEventStreamSpy } = vi.hoisted(() => ({ openEventStreamSpy: vi.fn() }));
 
 vi.mock("../../services/scrum-cards-api", () => ({
   default: {
-    openEventStrem: (roomId: string, clientId: string) =>
-      openEventStremSpy(roomId, clientId),
+    openEventStream: (roomId: string, clientId: string) =>
+      openEventStreamSpy(roomId, clientId),
   },
 }));
 
@@ -56,8 +56,8 @@ afterEach(() => {
 });
 
 beforeEach(() => {
-  openEventStremSpy.mockClear();
-  openEventStremSpy.mockReturnValue({ subscribe: () => ({ unsubscribe: vi.fn() }) });
+  openEventStreamSpy.mockClear();
+  openEventStreamSpy.mockReturnValue({ subscribe: () => ({ unsubscribe: vi.fn() }) });
 });
 
 describe("content", () => {
@@ -68,9 +68,9 @@ describe("content", () => {
       </MemoryRouter>
     );
     fireEvent.click(screen.getByTestId("set-client"));
-    expect(openEventStremSpy).toHaveBeenCalledTimes(1);
-    expect(openEventStremSpy).toHaveBeenCalledWith("room123", "client-1");
+    expect(openEventStreamSpy).toHaveBeenCalledTimes(1);
+    expect(openEventStreamSpy).toHaveBeenCalledWith("room123", "client-1");
     fireEvent.click(screen.getByTestId("tick"));
-    expect(openEventStremSpy).toHaveBeenCalledTimes(1);
+    expect(openEventStreamSpy).toHaveBeenCalledTimes(1);
   });
 });

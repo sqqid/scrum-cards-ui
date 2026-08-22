@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { httpProtocol, resolveOrigin, webSocketProtocol } from "./api-url";
+import { httpProtocol, resolveOrigin } from "./api-url";
 
 describe("httpProtocol", () => {
   it("follows the page protocol for https pages", () => {
@@ -9,16 +9,6 @@ describe("httpProtocol", () => {
 
   it("falls back to http for non-https pages", () => {
     expect(httpProtocol("http:")).toBe("http:");
-  });
-});
-
-describe("webSocketProtocol", () => {
-  it("uses wss on https pages", () => {
-    expect(webSocketProtocol("https:")).toBe("wss:");
-  });
-
-  it("uses ws on http pages", () => {
-    expect(webSocketProtocol("http:")).toBe("ws:");
   });
 });
 

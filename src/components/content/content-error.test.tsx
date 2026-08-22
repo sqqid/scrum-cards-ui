@@ -9,14 +9,14 @@ import { ClientContext, ClientProvider } from "../contexts/client-context";
 import { ModalContextProvider } from "../contexts/modal-context";
 import { RoomStateProvider } from "../contexts/room-context";
 
-const { openEventStremSpy, revealSpy } = vi.hoisted(() => ({
-  openEventStremSpy: vi.fn(),
+const { openEventStreamSpy, revealSpy } = vi.hoisted(() => ({
+  openEventStreamSpy: vi.fn(),
   revealSpy: vi.fn(),
 }));
 
 vi.mock("../../services/scrum-cards-api", () => ({
   default: {
-    openEventStrem: (roomId: string, clientId: string) => openEventStremSpy(roomId, clientId),
+    openEventStream: (roomId: string, clientId: string) => openEventStreamSpy(roomId, clientId),
     reveal: (roomId: string) => revealSpy(roomId),
   },
 }));
@@ -63,8 +63,8 @@ afterEach(() => {
 });
 
 beforeEach(() => {
-  openEventStremSpy.mockClear();
-  openEventStremSpy.mockReturnValue(broadcastWithSelectedClient());
+  openEventStreamSpy.mockClear();
+  openEventStreamSpy.mockReturnValue(broadcastWithSelectedClient());
   revealSpy.mockClear();
 });
 
@@ -83,7 +83,7 @@ describe("content error feedback", () => {
   });
 
   it("shows the error message when the room event stream fails", async () => {
-    openEventStremSpy.mockReturnValue(throwError(() => new Error("stream failed")));
+    openEventStreamSpy.mockReturnValue(throwError(() => new Error("stream failed")));
     render(
       <MemoryRouter initialEntries={["/room123"]}>
         <ContentHarness />

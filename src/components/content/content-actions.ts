@@ -19,29 +19,14 @@ const contentActions = {
     clientId: string,
     observer: { next: (data: string) => void; error?: (error: Error) => void }
   ): Subscription => {
-    return scrumCardsApi.openEventStrem(roomId, clientId).subscribe({
+    return scrumCardsApi.openEventStream(roomId, clientId).subscribe({
       next: (data: string) => observer.next(data),
       error: (err: Error) => {
         console.error("Failed to open room event stream:", err);
         observer.error?.(err);
       },
     });
-    // scrumCardsApi.openEventStrem(roomId, clientId)
-    //   .subscribe(observer)
-    // .pipe(
-    //   catchError(error => { throw error }),
-    //   retry({ delay: 5000 })
-    // )
   },
-
-  // openStream: (roomId: string, clientId: string, observer: { next: (data: string) => void }) => {
-  //   scrumCardsApi.openStrem(roomId, clientId)
-  //     .pipe(
-  //       catchError(error => { throw error }),
-  //       retry({ delay: 5000 })
-  //     )
-  //     .subscribe(observer)
-  // },
 
   reveal: (roomId: string, onError?: (error: Error) => void) => {
     scrumCardsApi.reveal(roomId).subscribe({

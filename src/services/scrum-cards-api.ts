@@ -1,7 +1,6 @@
 import { from, Observable } from "rxjs";
-import { webSocket, WebSocketSubject } from "rxjs/webSocket";
 import conf from "../constants/config";
-import { httpProtocol, resolveOrigin, webSocketProtocol } from "./api-url";
+import { httpProtocol, resolveOrigin } from "./api-url";
 
 enum REQUEST_METHOD {
   PUT = "PUT",
@@ -11,7 +10,6 @@ enum REQUEST_METHOD {
 
 class ScrumCardsApi {
   private readonly apiUrl: string;
-  private stream: WebSocketSubject<any> | undefined;
 
   constructor() {
     this.apiUrl = `${conf.API_URL}`;
@@ -49,7 +47,7 @@ class ScrumCardsApi {
     return this.getObservable(`rooms/${roomId}/reveal/`, REQUEST_METHOD.GET);
   }
 
-  openEventStrem(roomId: string, clientId: string): Observable<any> {
+  openEventStream(roomId: string, clientId: string): Observable<any> {
     return new Observable<any>((observer) => {
       const eventSource = new EventSource(
         `${this.getApiOrigin()}/rooms/${roomId}/clients/${clientId}/event/`
@@ -74,40 +72,14 @@ class ScrumCardsApi {
     });
   }
 
-  openStrem(roomId: string, clientId: string): WebSocketSubject<any> {
-    if (!this.stream) {
-      this.stream = webSocket(
-        `${this.getWebSocketOrigin()}/rooms/${roomId}/clients/${clientId}/ws`
-      );
-    }
-    return this.stream;
-  }
-
-  disconnectStrem() {
-    if (this.stream) {
-      this.stream.complete();
-      this.stream.unsubscribe();
-      this.stream = undefined;
-    }
-  }
-
-  getStream() {
-    return this.stream;
-  }
-
   // Origin for REST and SSE requests. The protocol follows the current page so
   // HTTPS deployments never issue mixed (http) requests.
   private getApiOrigin(): string {
     return resolveOrigin(this.apiUrl, httpProtocol(window.location.protocol));
   }
 
-  // Origin for the WebSocket stream. Uses wss on https pages and ws otherwise.
-  private getWebSocketOrigin(): string {
-    return resolveOrigin(this.apiUrl, webSocketProtocol(window.location.protocol));
-  }
-
-  private getObservable(endpint: string, method: REQUEST_METHOD): Observable<any> {
-    const url = `${this.getApiOrigin()}/${endpint}`;
+  private getObservable(endpoint: string, method: REQUEST_METHOD): Observable<any> {
+    const url = `${this.getApiOrigin()}/${endpoint}`;
     return ScrumCardsApi.fetchData(url, method);
   }
 
