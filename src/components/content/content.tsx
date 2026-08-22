@@ -9,9 +9,9 @@ import Table from "./table/table";
 
 const Content: FC = () => {
   const { room_id } = useParams();
-  const clientContext = useContext(ClientContext);
-  const roomStateContext = useContext(RoomStateContext);
-  const modalContext = useContext(ModalContext);
+  const { id: clientId } = useContext(ClientContext);
+  const { roomClients, setRoomState: applyRoomState } = useContext(RoomStateContext);
+  const { setVisible } = useContext(ModalContext);
   const navigate = useNavigate();
   const [roomState, setRoomState] = useState<IRoomState>({
     state: RoomStateEnum.PICK,
@@ -24,21 +24,19 @@ const Content: FC = () => {
       return;
     }
 
-    if (clientContext.id) {
-      const subscription = contentActions.openStream(room_id, clientContext.id, {
+    if (clientId) {
+      const subscription = contentActions.openStream(room_id, clientId, {
         next: (data) => {
           const roomData: IRoomState = JSON.parse(data);
           setRoomState(roomData);
-          if (roomStateContext) {
-            roomStateContext.setRoomState(roomData.state as RoomStateEnum, roomData.clients);
-          }
+          applyRoomState(roomData.state as RoomStateEnum, roomData.clients);
         },
       });
       return () => subscription.unsubscribe();
-    } else if (modalContext.setVisible) {
-      modalContext.setVisible(true);
+    } else {
+      setVisible(true);
     }
-  }, [room_id, clientContext.id]);
+  }, [room_id, clientId, applyRoomState, setVisible, navigate]);
 
   const selectedCard = useMemo(
     () => roomState.clients.filter((client) => client.selected).length > 0,
@@ -46,13 +44,13 @@ const Content: FC = () => {
   );
 
   const reveal = () => {
-    if (room_id && roomStateContext.roomClients) {
+    if (room_id && roomClients) {
       contentActions.reveal(room_id);
     }
   };
 
   const newVoting = () => {
-    if (room_id && roomStateContext.roomClients) {
+    if (room_id && roomClients) {
       contentActions.newVoting(room_id);
     }
   };
@@ -61,7 +59,7 @@ const Content: FC = () => {
     <div className="content">
       <div className="content__top">
         <div className="content__controls">
-          {!selectedCard && clientContext.id && RoomStateEnum.REVEAL !== roomState.state ? (
+          {!selectedCard && clientId && RoomStateEnum.REVEAL !== roomState.state ? (
             <span>Pick your cards!</span>
           ) : null}
           {RoomStateEnum.PICK === roomState.state && selectedCard ? (

@@ -1,4 +1,12 @@
-import { createContext, useEffect, useLayoutEffect, useState, FC, ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useState,
+  FC,
+  ReactNode,
+} from "react";
 import { storage } from "../../constants/local-storage";
 import { of } from "rxjs";
 
@@ -21,11 +29,11 @@ const ThemeContext = createContext<IThemeContext>({ theme: THEME.LIGHT, toggleTh
 const ThemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [theme, setTheme] = useState({ theme: THEME.LIGHT });
 
-  const toggleTheme = () => {
+  const toggleTheme = useCallback(() => {
     const newTheme = theme.theme === THEME.LIGHT ? THEME.DARK : THEME.LIGHT;
     setTheme({ theme: newTheme });
     localStorage.setItem(storage.THEME, newTheme);
-  };
+  }, [theme.theme]);
 
   useLayoutEffect(() => {
     of(localStorage.getItem(storage.THEME))
@@ -37,7 +45,7 @@ const ThemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   useEffect(() => {
     document.documentElement.className = theme.theme;
-  }, [theme]);
+  }, [theme.theme]);
 
   return (
     <ThemeContext.Provider value={{ theme: theme.theme, toggleTheme: toggleTheme }}>

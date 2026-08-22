@@ -1,4 +1,4 @@
-import { createContext, useState, FC, ReactNode } from "react";
+import { createContext, useCallback, useState, FC, ReactNode } from "react";
 import { IRoomClient } from "../content/content-actions";
 
 enum RoomStateEnum {
@@ -27,9 +27,12 @@ const RoomStateProvider: FC<{ children: ReactNode }> = ({ children }) => {
     roomClients: undefined,
   });
 
-  const setRoomState = (newState: RoomStateEnum, newClients: IRoomClient[]) => {
-    setState({ roomState: newState, roomClients: newClients });
-  };
+  const setRoomState = useCallback(
+    (newState: RoomStateEnum, newClients: IRoomClient[]) => {
+      setState({ roomState: newState, roomClients: newClients });
+    },
+    []
+  );
 
   return (
     <RoomStateContext.Provider

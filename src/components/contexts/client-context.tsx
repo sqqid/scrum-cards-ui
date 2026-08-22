@@ -1,4 +1,4 @@
-import { createContext, useState, FC, ReactNode } from "react";
+import { createContext, useCallback, useState, FC, ReactNode } from "react";
 
 interface IClient {
   id: string | undefined;
@@ -23,9 +23,9 @@ const ClientProvider: FC<{ children: ReactNode }> = ({ children }) => {
     name: undefined,
   });
 
-  const changeClient = ({ id, name }: { id?: string; name?: string }) => {
+  const changeClient = useCallback(({ id, name }: { id?: string; name?: string }) => {
     setClient({ id: id, name: name });
-  };
+  }, []);
 
   return (
     <ClientContext.Provider value={{ id: client.id, name: client.name, changeClient }}>

@@ -8,31 +8,31 @@ import { ModalContext } from "../contexts/modal-context";
 
 const Modal: FC = () => {
   const { room_id } = useParams();
-  const clientContext = useContext(ClientContext);
-  const modalContext = useContext(ModalContext);
+  const { id: clientId, name: clientName, changeClient } = useContext(ClientContext);
+  const { visible, setVisible } = useContext(ModalContext);
   const [input, setInput] = useState("");
   const navigate = useNavigate();
 
-  const setVisibility = () => (modalContext.setVisible ? modalContext.setVisible(false) : null);
+  const setVisibility = () => setVisible(false);
 
   const setUserName = () => {
     if (!room_id) {
       navigate(`../`);
       return;
     }
-    if (input && clientContext.id) {
-      const client = { id: clientContext.id, name: input };
+    if (input && clientId) {
+      const client = { id: clientId, name: input };
       const observer = {
         next: () => {
-          clientContext.changeClient(client);
+          changeClient(client);
           saveNameToLocalStorage(input);
         },
       };
       modalActions.updateUserName(room_id, client, observer);
-    } else if (input && !clientContext.id) {
+    } else if (input && !clientId) {
       modalActions.registerClient(room_id, input, {
-        next: (clientId) => {
-          clientContext.changeClient({ id: clientId, name: input });
+        next: (newClientId) => {
+          changeClient({ id: newClientId, name: input });
           saveNameToLocalStorage(input);
         },
       });
@@ -44,7 +44,7 @@ const Modal: FC = () => {
   const addNewRoom = () => {
     const observer = {
       next: (data: IAddRoomClicked) => {
-        clientContext.changeClient({ id: data.clientId, name: input });
+        changeClient({ id: data.clientId, name: input });
         navigate(`../${data.roomId}`);
       },
     };
@@ -57,13 +57,13 @@ const Modal: FC = () => {
   };
 
   useEffect(() => {
-    if (clientContext.name) {
-      setInput(clientContext.name);
+    if (clientName) {
+      setInput(clientName);
     } else {
       const name = loadNameFromLocalStorage();
       if (name) setInput(name);
     }
-  }, [clientContext]);
+  }, [clientName]);
 
   const loadNameFromLocalStorage = () => {
     const localStorageName = localStorage.getItem(storage.CLIENT_NAME);
@@ -77,7 +77,7 @@ const Modal: FC = () => {
   };
 
   return (
-    <div className={`modal ${!room_id || modalContext.visible ? " modal--show" : null}`}>
+    <div className={`modal ${!room_id || visible ? " modal--show" : null}`}>
       <div className="modal__window">
         <div className="modal__input">
           <label>Your display name</label>

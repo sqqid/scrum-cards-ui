@@ -10,7 +10,7 @@ export interface ICardState {
 
 const Picker: FC = () => {
   const [state, setState] = useState<ICardState>();
-  const roomStateContext = useContext(RoomStateContext);
+  const { roomState } = useContext(RoomStateContext);
 
   const initialCards: ICardState[] = [
     "0",
@@ -29,23 +29,26 @@ const Picker: FC = () => {
   });
   const [cards, setCards] = useState<ICardState[]>(initialCards);
 
+  const { number: selectedNumber } = state ?? {};
+
   useEffect(() => {
-    if (state) {
+    if (selectedNumber !== undefined) {
       const newCards = cards.map((card) => ({
         ...card,
-        selected: state.number === card.number,
+        selected: selectedNumber === card.number,
       }));
       setCards(newCards);
     } else {
       setCards(initialCards);
     }
-  }, [state]);
+  }, [selectedNumber]);
 
   useEffect(() => {
-    if (roomStateContext.roomState === RoomStateEnum.REVEAL) {
+    setState(undefined);
+    if (roomState === RoomStateEnum.REVEAL) {
       setCards(initialCards);
     }
-  }, [roomStateContext.setRoomState]);
+  }, [roomState]);
 
   return (
     <div className="picker">
