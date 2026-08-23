@@ -1,8 +1,8 @@
 # Scrum Cards — Frontend
 
-The client side of [Scrum Cards](../scrum_card_backend) — a planning poker app I've
-been building as a hobby project. A chance to try a modern React stack without the
-usual boilerplate.
+The client side of [Scrum Cards](https://github.com/sqqid/scrum-cards) — a
+planning poker app I've been building as a hobby project. A chance to try a
+modern React stack without the usual boilerplate.
 
 ## Stack
 
