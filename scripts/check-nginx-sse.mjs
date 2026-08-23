@@ -1,8 +1,8 @@
-// Verification script for ISSUE-022 (nginx SSE streaming configuration).
+// Nginx SSE streaming verification script.
 //
 // Boots the real nginx (NGINX_BIN env, defaults to `nginx` on PATH) with the
 // repo's nginx/nginx.conf server block, proxied to a mock SSE backend on port
-// 8080, and checks the acceptance criteria:
+// 8080, and checks that:
 //   1. proxy buffering and caching are disabled for the /api location
 //   2. an explicit long read timeout is set for the SSE path
 //   3. no WebSocket upgrade header handling remains in the configuration

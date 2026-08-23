@@ -26,6 +26,13 @@ const isFunctionalComment = (text: string) => {
   );
 };
 
+const scriptKindFor = (path: string): ts.ScriptKind =>
+  path.endsWith(".tsx")
+    ? ts.ScriptKind.TSX
+    : path.endsWith(".mjs")
+      ? ts.ScriptKind.JS
+      : ts.ScriptKind.TS;
+
 const commentsIn = (path: string): string[] => {
   const content = readFileSync(path, "utf8");
   const sourceFile = ts.createSourceFile(
@@ -33,7 +40,7 @@ const commentsIn = (path: string): string[] => {
     content,
     ts.ScriptTarget.ES2020,
     true,
-    path.endsWith(".tsx") ? ts.ScriptKind.TSX : ts.ScriptKind.TS
+    scriptKindFor(path)
   );
   const ranges = new Map<number, ts.CommentRange>();
   const visit = (node: ts.Node) => {
@@ -49,6 +56,13 @@ const commentsIn = (path: string): string[] => {
   return [...ranges.values()].map((range) => content.substring(range.pos, range.end));
 };
 
+const scriptFiles = (dir: string): string[] =>
+  readdirSync(dir)
+    .filter((entry) => /\.mjs$/.test(entry))
+    .map((entry) => join(dir, entry));
+
+const internalProcessReference = /ISSUE-\d+|\bPRD\b|\bADR\b/i;
+
 describe("src comment hygiene", () => {
   it("keeps every TypeScript file free of comments except functional directives", () => {
     for (const path of tsFiles(srcDir)) {
@@ -56,6 +70,17 @@ describe("src comment hygiene", () => {
         expect(isFunctionalComment(text), `${path} keeps a comment: ${JSON.stringify(text)}`).toBe(
           true
         );
+      }
+    }
+  });
+
+  it("keeps script comments free of internal process references", () => {
+    for (const path of scriptFiles(join(srcDir, "..", "scripts"))) {
+      for (const text of commentsIn(path)) {
+        expect(
+          internalProcessReference.test(text),
+          `${path} comment references an internal process: ${JSON.stringify(text)}`
+        ).toBe(false);
       }
     }
   });

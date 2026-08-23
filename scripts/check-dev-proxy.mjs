@@ -1,7 +1,6 @@
-// Verification script for ISSUE-021 (dev proxy /api to the backend).
+// Dev-proxy verification script.
 //
-// Boots the real Vite dev server against a mock backend and checks the
-// acceptance criteria:
+// Boots the real Vite dev server against a mock backend and checks that:
 //   1. /api requests are proxied to the backend with the /api prefix preserved
 //   2. the proxy target defaults to the backend on port 8080, and the
 //      VITE_API_URL env override still works
