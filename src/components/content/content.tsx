@@ -26,10 +26,6 @@ const Content: FC = () => {
   const rejoinAttempts = useRef(0);
   const lastRoomId = useRef<string | undefined>(undefined);
 
-  // The backend removes a Client when its stream disconnects (ADR 0005), so a
-  // failed stream strands the participant: re-register a new Client with the
-  // same display name and let the stream effect open a fresh stream. Score and
-  // Selected do not survive the rejoin.
   const rejoin = useCallback(
     (err: Error) => {
       if (!room_id) {
@@ -72,8 +68,6 @@ const Content: FC = () => {
     }
 
     if (clientId) {
-      // A failed stream terminates its subscription, which closes the
-      // EventSource; the effect cleanup below closes it on rejoin/unmount.
       const subscription = contentActions.openStream(room_id, clientId, {
         next: (data) => {
           rejoinAttempts.current = 0;

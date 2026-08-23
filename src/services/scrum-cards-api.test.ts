@@ -1,8 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { firstValueFrom } from "rxjs";
 
-// config.ts reads window.location.host at import time, so install a minimal
-// window stub before the module under test loads.
 vi.hoisted(() => {
   Object.defineProperty(globalThis, "window", {
     configurable: true,

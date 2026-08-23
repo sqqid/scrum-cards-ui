@@ -22,9 +22,7 @@ vi.mock("../../services/scrum-cards-api", () => ({
   },
 }));
 
-// Node's native globalThis.localStorage shadows the jsdom one in this
-// vitest version, so install a minimal in-memory Storage for the tests.
-const installLocalStorage = () => {
+const installInMemoryLocalStorage = () => {
   const store = new Map<string, string>();
   Object.defineProperty(globalThis, "localStorage", {
     configurable: true,
@@ -88,7 +86,7 @@ describe("content rejoin on stream loss", () => {
   let closedStreams: string[];
 
   beforeEach(() => {
-    installLocalStorage();
+    installInMemoryLocalStorage();
     streams = new Map();
     closedStreams = [];
     openEventStreamSpy.mockClear();

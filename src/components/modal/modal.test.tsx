@@ -33,9 +33,7 @@ const ModalHarness: FC = () => {
 
 const inputOf = (container: HTMLElement) => container.querySelector("input") as HTMLInputElement;
 
-// Node's native globalThis.localStorage shadows the jsdom one in this
-// vitest version, so install a minimal in-memory Storage for the tests.
-const installLocalStorage = () => {
+const installInMemoryLocalStorage = () => {
   const store = new Map<string, string>();
   Object.defineProperty(globalThis, "localStorage", {
     configurable: true,
@@ -59,7 +57,7 @@ afterEach(() => {
 });
 
 beforeEach(() => {
-  installLocalStorage();
+  installInMemoryLocalStorage();
 });
 
 describe("modal", () => {

@@ -72,8 +72,6 @@ class ScrumCardsApi {
     });
   }
 
-  // Origin for REST and SSE requests. The protocol follows the current page so
-  // HTTPS deployments never issue mixed (http) requests.
   private getApiOrigin(): string {
     return resolveOrigin(this.apiUrl, httpProtocol(window.location.protocol));
   }
@@ -91,8 +89,6 @@ class ScrumCardsApi {
       }).then(async (res) => {
         const data = await res.json();
         if (!res.ok) {
-          // The backend always answers errors with a JSON body carrying a
-          // message field (ADR 0004); surface it as the error message.
           throw new Error(data?.message || `HTTP ${res.status}`);
         }
         return data;

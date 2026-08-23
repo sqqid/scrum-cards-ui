@@ -78,9 +78,7 @@ const ThemeHarness: FC<{ seen: { current: unknown[] } }> = ({ seen }) => {
   );
 };
 
-// Node's native globalThis.localStorage shadows the jsdom one in this
-// vitest version, so install a minimal in-memory Storage for the tests.
-const installLocalStorage = () => {
+const installInMemoryLocalStorage = () => {
   const store = new Map<string, string>();
   Object.defineProperty(globalThis, "localStorage", {
     configurable: true,
@@ -100,7 +98,7 @@ const installLocalStorage = () => {
 };
 
 beforeAll(() => {
-  installLocalStorage();
+  installInMemoryLocalStorage();
 });
 
 afterEach(() => {
